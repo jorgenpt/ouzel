@@ -28,76 +28,53 @@ void Samples::begin(const std::string& sample)
     sharedEngine->getRenderer()->setClearColor(graphics::Color(64, 0, 0));
     sharedEngine->getWindow()->setTitle("Samples");
 
-    eventHandler.keyboardHandler = bind(&Samples::handleKeyboard, this, placeholders::_1, placeholders::_2);
-
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
-    mainMenu = make_shared<MainMenu>(*this);
+    setSample(sample);
+}
 
-    scene::ScenePtr newScene;
-
+void Samples::setSample(const std::string& sample)
+{
     if (!sample.empty())
     {
         if (sample == "sprites")
         {
-            newScene = make_shared<SpritesSample>(*this);
+            current.reset(new SpritesSample(*this));
         }
         else if (sample == "gui")
         {
-            newScene = make_shared<GUISample>(*this);
+            current.reset(new GUISample(*this));
         }
         else if (sample == "render_target")
         {
-            newScene = make_shared<RTSample>(*this);
+            current.reset(new RTSample(*this));
         }
         else if (sample == "animations")
         {
-            newScene = make_shared<AnimationsSample>(*this);
+            current.reset(new AnimationsSample(*this));
         }
         else if (sample == "input")
         {
-            newScene = make_shared<InputSample>(*this);
+            current.reset(new InputSample(*this));
         }
         else if (sample == "sound")
         {
-            newScene = make_shared<SoundSample>(*this);
+            current.reset(new SoundSample(*this));
         }
     }
 
-    if (newScene)
+    if (!current)
     {
-        sharedEngine->getSceneManager()->setScene(*newScene);
+        current.reset(new MainMenu(*this));
     }
-    else
-    {
-        sharedEngine->getSceneManager()->setScene(*mainMenu);
-    }
+
+    sharedEngine->getSceneManager()->setScene(*current);
 }
 
 void Samples::back()
 {
     sharedEngine->getInput()->setCursorVisible(true);
-    sharedEngine->getSceneManager()->setScene(mainMenu);
-}
 
-bool Samples::handleKeyboard(Event::Type type, const KeyboardEvent& event)
-{
-    if (event.key == ouzel::input::KeyboardKey::ESCAPE)
-    {
-        if (type == Event::Type::KEY_DOWN)
-        {
-            if (sharedEngine->getSceneManager()->getScene() != mainMenu)
-            {
-                back();
-            }
-            else
-            {
-                sharedEngine->exit();
-            }
-        }
-
-        return false;
-    }
-
-    return true;
+    current.reset(new MainMenu(*this));
+    sharedEngine->getSceneManager()->setScene(*current);
 }

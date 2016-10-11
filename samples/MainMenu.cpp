@@ -22,8 +22,7 @@ MainMenu::MainMenu(Samples& pSamples):
     soundButton("button.png", "button_selected.png", "button_down.png", "", "Sound", graphics::Color(20, 0, 0, 255), "arial.fnt")
 {
     eventHandler.uiHandler = bind(&MainMenu::handleUI, this, placeholders::_1, placeholders::_2);
-
-    sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
+    eventHandler.keyboardHandler = bind(&MainMenu::handleKeyboard, this, placeholders::_1, placeholders::_2);
 
     addLayer(layer);
 
@@ -54,40 +53,58 @@ MainMenu::~MainMenu()
 {
 }
 
+void MainMenu::enter()
+{
+    sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
+}
+
+void MainMenu::leave()
+{
+    sharedEngine->getEventDispatcher()->removeEventHandler(eventHandler);
+}
+
+bool MainMenu::handleKeyboard(Event::Type type, const KeyboardEvent& event)
+{
+    if (event.key == ouzel::input::KeyboardKey::ESCAPE)
+    {
+        if (type == Event::Type::KEY_DOWN)
+        {
+            sharedEngine->exit();
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
 bool MainMenu::handleUI(Event::Type type, const UIEvent& event)
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
-        scene::ScenePtr newScene;
-
         if (event.node == &spritesButton)
         {
-            newScene = make_shared<SpritesSample>(samples);
+            samples.setSample("sprites");
         }
         else if (event.node == &GUIButton)
         {
-            newScene = make_shared<GUISample>(samples);
+            samples.setSample("gui");
         }
         else if (event.node == &renderTargetButton)
         {
-            newScene = make_shared<RTSample>(samples);
+            samples.setSample("render_target");
         }
         else if (event.node == &animationsButton)
         {
-            newScene = make_shared<AnimationsSample>(samples);
+            samples.setSample("animations");
         }
         else if (event.node == &inputButton)
         {
-            newScene = make_shared<InputSample>(samples);
+            samples.setSample("input");
         }
         else if (event.node == &soundButton)
         {
-            newScene = make_shared<SoundSample>(samples);
-        }
-
-        if (newScene)
-        {
-            sharedEngine->getSceneManager()->setScene(newScene);
+            samples.setSample("sound");
         }
     }
 

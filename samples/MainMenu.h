@@ -11,9 +11,13 @@ public:
     MainMenu(Samples& pSamples);
     virtual ~MainMenu();
 
+private:
+    virtual void enter() override;
+    virtual void leave() override;
+
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event);
     bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
 
-private:
     Samples& samples;
 
     ouzel::scene::Camera camera;
