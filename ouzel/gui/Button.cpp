@@ -4,14 +4,12 @@
 #include <functional>
 #include "Button.h"
 #include "core/Engine.h"
-#include "scene/Sprite.h"
 #include "events/EventHandler.h"
 #include "events/EventDispatcher.h"
 #include "scene/Layer.h"
 #include "scene/Camera.h"
 #include "Label.h"
 #include "utils/Utils.h"
-#include "scene/TextDrawable.h"
 
 namespace ouzel
 {
@@ -26,48 +24,45 @@ namespace ouzel
 
             if (!normalImage.empty())
             {
-                normalSprite = std::make_shared<scene::Sprite>();
+                normalSprite.reset(new scene::Sprite());
                 if (normalSprite->initFromFile(normalImage, false))
                 {
-                    addComponent(normalSprite);
+                    addComponent(*normalSprite);
                 }
             }
 
             if (!selectedImage.empty())
             {
-                selectedSprite = std::make_shared<scene::Sprite>();
+                selectedSprite.reset(new scene::Sprite());
                 if (selectedSprite->initFromFile(selectedImage, false))
                 {
-                    addComponent(selectedSprite);
+                    addComponent(*selectedSprite);
                 }
             }
 
             if (!pressedImage.empty())
             {
-                pressedSprite = std::make_shared<scene::Sprite>();
+                pressedSprite.reset(new scene::Sprite());
                 if (pressedSprite->initFromFile(pressedImage, false))
                 {
-                    addComponent(pressedSprite);
+                    addComponent(*pressedSprite);
                 }
             }
 
             if (!disabledImage.empty())
             {
-                disabledSprite = std::make_shared<scene::Sprite>();
+                disabledSprite.reset(new scene::Sprite());
                 if (disabledSprite->initFromFile(disabledImage, false))
                 {
-                    addComponent(disabledSprite);
+                    addComponent(*disabledSprite);
                 }
             }
 
             if (!label.empty())
             {
-                labelDrawable = std::make_shared<scene::TextDrawable>(font, label);
-                if (labelDrawable)
-                {
-                    labelDrawable->setColor(labelColor);
-                    addComponent(labelDrawable);
-                }
+                labelDrawable.reset(new scene::TextDrawable(font, label));
+                labelDrawable->setColor(labelColor);
+                addComponent(*labelDrawable);
             }
 
             pickable = true;
@@ -102,7 +97,7 @@ namespace ouzel
         {
             if (!enabled) return true;
 
-            if (event.node.get() == this)
+            if (event.node == this)
             {
                 if (type == Event::Type::UI_ENTER_NODE)
                 {

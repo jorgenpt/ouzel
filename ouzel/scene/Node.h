@@ -19,6 +19,9 @@ namespace ouzel
 {
     namespace scene
     {
+        class Component;
+        class Camera;
+
         class Node: public NodeContainer
         {
             friend NodeContainer;
@@ -27,7 +30,7 @@ namespace ouzel
             Node();
             virtual ~Node();
 
-            virtual bool addChild(const NodePtr& node) override;
+            virtual bool addChild(Node& node) override;
             virtual bool hasParent() const { return (parent != nullptr); }
 
             virtual void setName(const std::string& newName) { name = newName; }
@@ -106,10 +109,10 @@ namespace ouzel
             void setReceiveInput(bool newReceiveInput) { receiveInput = newReceiveInput; }
             bool isReceivingInput() const { return receiveInput; }
 
-            const std::vector<ComponentPtr>& getComponents() const { return components; }
-            bool addComponent(const ComponentPtr& component);
+            const std::vector<Component*>& getComponents() const { return components; }
+            bool addComponent(Component& component);
             bool removeComponent(uint32_t index);
-            bool removeComponent(const ComponentPtr& component);
+            bool removeComponent(Component& component);
             void removeAllComponents();
 
             AABB2 getBoundingBox() const;
@@ -119,11 +122,11 @@ namespace ouzel
 
             virtual void visit(const Matrix4& newParentTransform,
                                bool parentTransformDirty,
-                               const CameraPtr& camera,
+                               Camera* camera,
                                Layer* currentLayer,
                                float depth);
-            virtual void draw(const CameraPtr& camera);
-            virtual void drawWireframe(const CameraPtr& camera);
+            virtual void draw(Camera* camera);
+            virtual void drawWireframe(Camera* camera);
 
             virtual void calculateLocalTransform() const;
             virtual void calculateTransform() const;
@@ -160,7 +163,7 @@ namespace ouzel
             float z = 0.0f;
 
             AnimatorPtr currentAnimator;
-            std::vector<ComponentPtr> components;
+            std::vector<Component*> components;
 
             NodeContainer* parent = nullptr;
 

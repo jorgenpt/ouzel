@@ -15,20 +15,20 @@ namespace ouzel
 
         NodeContainer::~NodeContainer()
         {
-            for (const NodePtr& node : children)
+            for (Node* node : children)
             {
                 if (entered) node->leave();
                 node->setParent(nullptr);
             }
         }
 
-        bool NodeContainer::addChild(const NodePtr& node)
+        bool NodeContainer::addChild(Node& node)
         {
-            if (!hasChild(node) && !node->hasParent())
+            if (!hasChild(node) && !node.hasParent())
             {
-                node->setParent(this);
-                if (entered) node->enter();
-                children.push_back(node);
+                node.setParent(this);
+                if (entered) node.enter();
+                children.push_back(&node);
 
                 return true;
             }
@@ -38,14 +38,14 @@ namespace ouzel
             }
         }
 
-        bool NodeContainer::removeChild(const NodePtr& node)
+        bool NodeContainer::removeChild(Node& node)
         {
-            std::list<NodePtr>::iterator i = std::find(children.begin(), children.end(), node);
+            std::list<Node*>::iterator i = std::find(children.begin(), children.end(), &node);
 
             if (i != children.end())
             {
-                if (entered) node->leave();
-                node->setParent(nullptr);
+                if (entered) node.leave();
+                node.setParent(nullptr);
                 children.erase(i);
 
                 return true;
@@ -69,13 +69,13 @@ namespace ouzel
             children.clear();
         }
 
-        bool NodeContainer::hasChild(const NodePtr& node, bool recursive) const
+        bool NodeContainer::hasChild(Node& node, bool recursive) const
         {
-            for (std::list<NodePtr>::const_iterator i = children.begin(); i != children.end(); ++i)
+            for (std::list<Node*>::const_iterator i = children.begin(); i != children.end(); ++i)
             {
-                const NodePtr& child = *i;
+                Node* child = *i;
 
-                if (child == node || (recursive && child->hasChild(node, true)))
+                if (child == &node || (recursive && child->hasChild(node, true)))
                 {
                     return true;
                 }
@@ -88,7 +88,7 @@ namespace ouzel
         {
             entered = true;
 
-            for (const NodePtr& node : children)
+            for (Node* node : children)
             {
                 node->enter();
             }
@@ -98,7 +98,7 @@ namespace ouzel
         {
             entered = false;
 
-            for (const NodePtr& node : children)
+            for (Node* node : children)
             {
                 node->leave();
             }

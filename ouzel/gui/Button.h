@@ -9,6 +9,8 @@
 #include "events/Event.h"
 #include "events/EventHandler.h"
 #include "graphics/Color.h"
+#include "scene/Sprite.h"
+#include "scene/TextDrawable.h"
 
 namespace ouzel
 {
@@ -31,11 +33,11 @@ namespace ouzel
 
             void updateSprite();
 
-            scene::SpritePtr normalSprite;
-            scene::SpritePtr selectedSprite;
-            scene::SpritePtr pressedSprite;
-            scene::SpritePtr disabledSprite;
-            scene::TextDrawablePtr labelDrawable;
+            std::unique_ptr<scene::Sprite> normalSprite;
+            std::unique_ptr<scene::Sprite> selectedSprite;
+            std::unique_ptr<scene::Sprite> pressedSprite;
+            std::unique_ptr<scene::Sprite> disabledSprite;
+            std::unique_ptr<scene::TextDrawable> labelDrawable;
 
             EventHandler eventHandler;
 

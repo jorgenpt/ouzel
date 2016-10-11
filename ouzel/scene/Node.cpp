@@ -22,7 +22,10 @@ namespace ouzel
 
         Node::~Node()
         {
-            for (const ComponentPtr& component : components)
+            if (parent) parent->removeChild(*this);
+            if (currentAnimator) currentAnimator->remove();
+
+            for (Component* component : components)
             {
                 component->setNode(nullptr);
             }
@@ -30,7 +33,7 @@ namespace ouzel
 
         void Node::visit(const Matrix4& newTransformMatrix,
                          bool parentTransformDirty,
-                         const CameraPtr& camera,
+                         Camera* camera,
                          Layer* currentLayer,
                          float depth)
         {
@@ -48,10 +51,10 @@ namespace ouzel
 
             if (cullDisabled || (!boundingBox.isEmpty() && camera->checkVisibility(getTransform(), boundingBox)))
             {
-                currentLayer->addToDrawQueue(std::static_pointer_cast<Node>(shared_from_this()), depth + z);
+                currentLayer->addToDrawQueue(*this, depth + z);
             }
 
-            for (const NodePtr& child : children)
+            for (Node* child : children)
             {
                 if (!child->isHidden())
                 {
@@ -62,7 +65,7 @@ namespace ouzel
             updateChildrenTransform = false;
         }
 
-        void Node::draw(const CameraPtr& camera)
+        void Node::draw(Camera* camera)
         {
             if (transformDirty)
             {
@@ -71,7 +74,7 @@ namespace ouzel
 
             graphics::Color drawColor(color.r, color.g, color.b, static_cast<uint8_t>(color.a * opacity));
 
-            for (const ComponentPtr& component : components)
+            for (Component* component : components)
             {
                 if (!component->isHidden())
                 {
@@ -80,7 +83,7 @@ namespace ouzel
             }
         }
 
-        void Node::drawWireframe(const CameraPtr& camera)
+        void Node::drawWireframe(Camera* camera)
         {
             if (transformDirty)
             {
@@ -89,7 +92,7 @@ namespace ouzel
 
             graphics::Color drawColor(color.r, color.g, color.b, 255);
 
-            for (const ComponentPtr& component : components)
+            for (Component* component : components)
             {
                 if (!component->isHidden())
                 {
@@ -98,11 +101,11 @@ namespace ouzel
             }
         }
 
-        bool Node::addChild(const NodePtr& node)
+        bool Node::addChild(Node& node)
         {
             if (NodeContainer::addChild(node))
             {
-                node->updateTransform(getTransform());
+                node.updateTransform(getTransform());
 
                 return true;
             }
@@ -174,7 +177,7 @@ namespace ouzel
         {
             Vector2 localPosition = convertWorldToLocal(worldPosition);
 
-            for (const ComponentPtr& component : components)
+            for (Component* component : components)
             {
                 if (component->pointOn(localPosition))
                 {
@@ -200,7 +203,7 @@ namespace ouzel
                 transformedEdges.push_back(Vector2(transformedEdge.x, transformedEdge.y));
             }
 
-            for (const ComponentPtr& component : components)
+            for (Component* component : components)
             {
                 if (component->shapeOverlaps(transformedEdges))
                 {
@@ -244,7 +247,7 @@ namespace ouzel
 
             if (currentAnimator)
             {
-                currentAnimator->start(std::static_pointer_cast<Node>(shared_from_this()));
+                currentAnimator->start(this);
                 sharedEngine->scheduleUpdate(animationUpdateCallback);
             }
         }
@@ -254,6 +257,7 @@ namespace ouzel
             if (currentAnimator)
             {
                 currentAnimator->stop();
+                currentAnimator->remove();
                 currentAnimator.reset();
                 sharedEngine->unscheduleUpdate(animationUpdateCallback);
             }
@@ -299,15 +303,15 @@ namespace ouzel
             inverseTransformDirty = false;
         }
 
-        bool Node::addComponent(const ComponentPtr& component)
+        bool Node::addComponent(Component& component)
         {
-            if (component->isAddedToNode())
+            if (component.isAddedToNode())
             {
                 return false;
             }
 
-            components.push_back(component);
-            component->setNode(this);
+            components.push_back(&component);
+            component.setNode(this);
 
             return true;
         }
@@ -319,7 +323,7 @@ namespace ouzel
                 return false;
             }
 
-            const ComponentPtr& component = components[index];
+            Component* component = components[index];
             component->setNode(nullptr);
 
             components.erase(components.begin() + static_cast<int>(index));
@@ -327,13 +331,13 @@ namespace ouzel
             return true;
         }
 
-        bool Node::removeComponent(const ComponentPtr& component)
+        bool Node::removeComponent(Component& component)
         {
             for (auto i = components.begin(); i != components.end();)
             {
-                if (*i == component)
+                if (*i == &component)
                 {
-                    component->setNode(nullptr);
+                    component.setNode(nullptr);
                     components.erase(i);
                     return true;
                 }
@@ -372,7 +376,7 @@ namespace ouzel
         {
             AABB2 boundingBox;
 
-            for (const ComponentPtr& component : components)
+            for (Component* component : components)
             {
                 if (!component->isHidden())
                 {

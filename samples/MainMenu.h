@@ -15,11 +15,17 @@ public:
 
 private:
     Samples& samples;
+
+    ouzel::scene::Camera camera;
+    ouzel::scene::Layer layer;
+
+    ouzel::gui::Menu menu;
+
     ouzel::EventHandler eventHandler;
-    ouzel::gui::ButtonPtr spritesButton;
-    ouzel::gui::ButtonPtr GUIButton;
-    ouzel::gui::ButtonPtr renderTargetButton;
-    ouzel::gui::ButtonPtr animationsButton;
-    ouzel::gui::ButtonPtr inputButton;
-    ouzel::gui::ButtonPtr soundButton;
+    ouzel::gui::Button spritesButton;
+    ouzel::gui::Button GUIButton;
+    ouzel::gui::Button renderTargetButton;
+    ouzel::gui::Button animationsButton;
+    ouzel::gui::Button inputButton;
+    ouzel::gui::Button soundButton;
 };

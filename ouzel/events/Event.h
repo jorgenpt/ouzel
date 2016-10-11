@@ -79,9 +79,14 @@ namespace ouzel
         std::string filename;
     };
 
+    namespace scene
+    {
+        class Node;
+    }
+
     struct UIEvent
     {
-        scene::NodePtr node;
+        scene::Node* node = nullptr;
         Vector2 position;
     };
 

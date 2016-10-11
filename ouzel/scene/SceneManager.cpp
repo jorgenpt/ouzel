@@ -18,11 +18,11 @@ namespace ouzel
         {
         }
 
-        void SceneManager::setScene(const ScenePtr& newScene)
+        void SceneManager::setScene(Scene& newScene)
         {
-            if (scene != newScene)
+            if (scene != &newScene)
             {
-                nextScene = newScene;
+                nextScene = &newScene;
             }
         }
 

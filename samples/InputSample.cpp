@@ -7,7 +7,10 @@ using namespace std;
 using namespace ouzel;
 
 InputSample::InputSample(Samples& pSamples):
-    samples(pSamples)
+    samples(pSamples),
+    flameParticleSystem("flame.json"),
+    button("button.png", "button_selected.png", "button_down.png", "", "Show/hide", graphics::Color::BLACK, "arial.fnt"),
+    backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt")
 {
     eventHandler.keyboardHandler = bind(&InputSample::handleKeyboard, this, placeholders::_1, placeholders::_2);
     eventHandler.mouseHandler = bind(&InputSample::handleMouse, this, placeholders::_1, placeholders::_2);
@@ -17,44 +20,35 @@ InputSample::InputSample(Samples& pSamples):
 
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
-    scene::LayerPtr layer = make_shared<scene::Layer>();
-    camera = make_shared<scene::Camera>();
-    layer->addCamera(camera);
+    layer.addCamera(camera);
     addLayer(layer);
 
-    scene::ParticleSystemPtr flameParticleSystem = make_shared<scene::ParticleSystem>("flame.json");
+    flame.addComponent(flameParticleSystem);
+    flame.setPickable(false);
+    layer.addChild(flame);
 
-    flame = make_shared<scene::Node>();
-    flame->addComponent(flameParticleSystem);
-    flame->setPickable(false);
-    layer->addChild(flame);
-
-    scene::LayerPtr guiLayer = make_shared<scene::Layer>();
-    guiLayer->addCamera(make_shared<scene::Camera>());
+    guiLayer.addCamera(guiCamera);
     addLayer(guiLayer);
 
-    gui::MenuPtr menu = std::make_shared<gui::Menu>();
-    guiLayer->addChild(menu);
+    guiLayer.addChild(menu);
 
-    button = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Show/hide", graphics::Color::BLACK, "arial.fnt");
-    button->setPosition(Vector2(-200.0f, 200.0f));
-    menu->addWidget(button);
+    button.setPosition(Vector2(-200.0f, 200.0f));
+    menu.addWidget(button);
 
-    backButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt");
-    backButton->setPosition(Vector2(-200.0f, -200.0f));
-    menu->addWidget(backButton);
+    backButton.setPosition(Vector2(-200.0f, -200.0f));
+    menu.addWidget(backButton);
 }
 
 InputSample::~InputSample()
 {
 }
 
-bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event) const
+bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event)
 {
     if (type == Event::Type::KEY_DOWN)
     {
-        Vector2 position = camera->getPosition();
-        Vector2 flamePosition = camera->convertWorldToNormalized(flame->getPosition());
+        Vector2 position = camera.getPosition();
+        Vector2 flamePosition = camera.convertWorldToNormalized(flame.getPosition());
 
         switch (event.key)
         {
@@ -86,30 +80,30 @@ bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event) c
                 sharedEngine->getWindow()->setSize(Size2(640.0f, 480.0f));
                 break;
             case input::KeyboardKey::TAB:
-                button->setEnabled(!button->isEnabled());
+                button.setEnabled(!button.isEnabled());
                 break;
             default:
                 break;
         }
 
-        camera->setPosition(position);
+        camera.setPosition(position);
 
-        Vector2 worldLocation = camera->convertNormalizedToWorld(flamePosition);
+        Vector2 worldLocation = camera.convertNormalizedToWorld(flamePosition);
 
-        flame->setPosition(worldLocation);
+        flame.setPosition(worldLocation);
     }
 
     return true;
 }
 
-bool InputSample::handleMouse(Event::Type type, const MouseEvent& event) const
+bool InputSample::handleMouse(Event::Type type, const MouseEvent& event)
 {
     switch (type)
     {
         case Event::Type::MOUSE_MOVE:
         {
-            Vector2 worldLocation = camera->convertNormalizedToWorld(event.position);
-            flame->setPosition(worldLocation);
+            Vector2 worldLocation = camera.convertNormalizedToWorld(event.position);
+            flame.setPosition(worldLocation);
             break;
         }
         default:
@@ -119,19 +113,19 @@ bool InputSample::handleMouse(Event::Type type, const MouseEvent& event) const
     return true;
 }
 
-bool InputSample::handleTouch(Event::Type, const TouchEvent& event) const
+bool InputSample::handleTouch(Event::Type, const TouchEvent& event)
 {
-    Vector2 worldLocation = camera->convertNormalizedToWorld(event.position);
-    flame->setPosition(worldLocation);
+    Vector2 worldLocation = camera.convertNormalizedToWorld(event.position);
+    flame.setPosition(worldLocation);
 
     return true;
 }
 
-bool InputSample::handleGamepad(Event::Type type, const GamepadEvent& event) const
+bool InputSample::handleGamepad(Event::Type type, const GamepadEvent& event)
 {
     if (type == Event::Type::GAMEPAD_BUTTON_CHANGE)
     {
-        Vector2 flamePosition = camera->convertWorldToNormalized(flame->getPosition());
+        Vector2 flamePosition = camera.convertWorldToNormalized(flame.getPosition());
 
         switch (event.button)
         {
@@ -159,22 +153,22 @@ bool InputSample::handleGamepad(Event::Type type, const GamepadEvent& event) con
                 break;
         }
 
-        Vector2 worldLocation = camera->convertNormalizedToWorld(flamePosition);
-        flame->setPosition(worldLocation);
+        Vector2 worldLocation = camera.convertNormalizedToWorld(flamePosition);
+        flame.setPosition(worldLocation);
     }
 
     return true;
 }
 
-bool InputSample::handleUI(Event::Type type, const UIEvent& event) const
+bool InputSample::handleUI(Event::Type type, const UIEvent& event)
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
-        if (event.node == backButton)
+        if (event.node == &backButton)
         {
             samples.back();
         }
-        else if (event.node == button)
+        else if (event.node == &button)
         {
             sharedEngine->getInput()->setCursorVisible(!sharedEngine->getInput()->isCursorVisible());
         }

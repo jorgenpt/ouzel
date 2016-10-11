@@ -12,6 +12,8 @@ namespace ouzel
 
     namespace scene
     {
+        class Scene;
+        
         class SceneManager: public Noncopyable
         {
             friend Engine;
@@ -20,14 +22,14 @@ namespace ouzel
 
             void draw();
 
-            void setScene(const ScenePtr& newScene);
-            const ScenePtr& getScene() const { return scene; }
+            void setScene(Scene& newScene);
+            Scene* getScene() const { return scene; }
 
         protected:
             SceneManager();
 
-            ScenePtr scene;
-            ScenePtr nextScene;
+            Scene* scene;
+            Scene* nextScene;
         };
     } // namespace scene
 } // namespace ouzel

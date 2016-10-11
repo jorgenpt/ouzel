@@ -66,11 +66,11 @@ void Samples::begin(const std::string& sample)
 
     if (newScene)
     {
-        sharedEngine->getSceneManager()->setScene(newScene);
+        sharedEngine->getSceneManager()->setScene(*newScene);
     }
     else
     {
-        sharedEngine->getSceneManager()->setScene(mainMenu);
+        sharedEngine->getSceneManager()->setScene(*mainMenu);
     }
 }
 

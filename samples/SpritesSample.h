@@ -11,16 +11,28 @@ public:
     SpritesSample(Samples& pSamples);
     virtual ~SpritesSample();
 
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
 
 private:
-    ouzel::scene::LayerPtr layer;
+    ouzel::scene::Layer layer;
+    ouzel::scene::Camera camera;
 
     Samples& samples;
-    ouzel::gui::ButtonPtr backButton;
+    ouzel::gui::Button backButton;
     ouzel::EventHandler eventHandler;
 
-    ouzel::scene::NodePtr character;
-    ouzel::gui::ButtonPtr hideButton;
-    ouzel::gui::ButtonPtr wireframeButton;
+    ouzel::scene::Sprite characterSprite;
+    ouzel::scene::Node character;
+    ouzel::gui::Button hideButton;
+    ouzel::gui::Button wireframeButton;
+
+    ouzel::scene::Sprite fireSprite;
+    ouzel::scene::Node fireNode;
+
+    ouzel::scene::Sprite triangleSprite;
+    ouzel::scene::Node triangleNode;
+
+    ouzel::gui::Menu menu;
+    ouzel::scene::Camera guiCamera;
+    ouzel::scene::Layer guiLayer;
 };

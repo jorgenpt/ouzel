@@ -11,18 +11,28 @@ public:
     InputSample(Samples& pSamples);
     virtual ~InputSample();
 
-    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
-    bool handleMouse(ouzel::Event::Type type, const ouzel::MouseEvent& event) const;
-    bool handleTouch(ouzel::Event::Type type, const ouzel::TouchEvent& event) const;
-    bool handleGamepad(ouzel::Event::Type type, const ouzel::GamepadEvent& event) const;
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event);
+    bool handleMouse(ouzel::Event::Type type, const ouzel::MouseEvent& event);
+    bool handleTouch(ouzel::Event::Type type, const ouzel::TouchEvent& event);
+    bool handleGamepad(ouzel::Event::Type type, const ouzel::GamepadEvent& event);
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
 
 private:
     Samples& samples;
-    ouzel::gui::ButtonPtr backButton;
+
+    ouzel::scene::Camera camera;
+    ouzel::scene::Layer layer;
+
+    ouzel::gui::Button backButton;
     ouzel::EventHandler eventHandler;
 
-    ouzel::gui::ButtonPtr button;
-    ouzel::scene::NodePtr flame;
-    ouzel::scene::CameraPtr camera;
+    ouzel::gui::Button button;
+    ouzel::scene::Node flame;
+
+    ouzel::scene::ParticleSystem flameParticleSystem;
+
+    ouzel::scene::Camera guiCamera;
+    ouzel::scene::Layer guiLayer;
+
+    ouzel::gui::Menu menu;
 };

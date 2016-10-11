@@ -20,7 +20,7 @@ namespace ouzel
 
         Layer::~Layer()
         {
-            for (const CameraPtr& camera : cameras)
+            for (Camera* camera : cameras)
             {
                 camera->removeFromLayer();
             }
@@ -30,9 +30,9 @@ namespace ouzel
         {
             drawQueue.clear();
 
-            for (const CameraPtr& camera : cameras)
+            for (Camera* camera : cameras)
             {
-                for (const NodePtr& child : children)
+                for (Node* child : children)
                 {
                     if (!child->isHidden())
                     {
@@ -40,7 +40,7 @@ namespace ouzel
                     }
                 }
 
-                drawQueue.sort([](const std::pair<NodePtr, float>& a, const std::pair<NodePtr, float>& b) {
+                drawQueue.sort([](const std::pair<Node*, float>& a, const std::pair<Node*, float>& b) {
                     return a.second > b.second;
                 });
 
@@ -59,11 +59,11 @@ namespace ouzel
             }
         }
 
-        bool Layer::addChild(const NodePtr& node)
+        bool Layer::addChild(Node& node)
         {
             if (NodeContainer::addChild(node))
             {
-                node->updateTransform(Matrix4::IDENTITY);
+                node.updateTransform(Matrix4::IDENTITY);
 
                 return true;
             }
@@ -73,42 +73,42 @@ namespace ouzel
             }
         }
 
-        void Layer::addToDrawQueue(const NodePtr& node, float depth)
+        void Layer::addToDrawQueue(Node& node, float depth)
         {
-            drawQueue.push_back({ node, depth });
+            drawQueue.push_back({ &node, depth });
         }
 
-        void Layer::addCamera(const CameraPtr& camera)
+        void Layer::addCamera(Camera& camera)
         {
-            auto i = cameras.insert(camera);
+            auto i = cameras.insert(&camera);
 
             if (i.second)
             {
-                camera->addToLayer(this);
-                camera->recalculateProjection();
+                camera.addToLayer(this);
+                camera.recalculateProjection();
             }
         }
 
-        void Layer::removeCamera(const CameraPtr& camera)
+        void Layer::removeCamera(Camera& camera)
         {
-            auto i = cameras.find(camera);
+            auto i = cameras.find(&camera);
 
             if (i != cameras.end())
             {
-                camera->removeFromLayer();
+                camera.removeFromLayer();
                 cameras.erase(i);
             }
         }
 
-        NodePtr Layer::pickNode(const Vector2& position) const
+        Node* Layer::pickNode(const Vector2& position) const
         {
-            for (const CameraPtr& camera : cameras)
+            for (Camera* camera : cameras)
             {
                 Vector2 worldPosition = camera->convertNormalizedToWorld(position);
 
-                for (std::list<std::pair<NodePtr, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
+                for (std::list<std::pair<Node*, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
                 {
-                    const NodePtr& node = i->first;
+                    Node* node = i->first;
 
                     if (!node->isHidden() && node->isPickable() && node->pointOn(worldPosition))
                     {
@@ -120,17 +120,17 @@ namespace ouzel
             return nullptr;
         }
 
-        std::vector<NodePtr> Layer::pickNodes(const Vector2& position) const
+        std::vector<Node*> Layer::pickNodes(const Vector2& position) const
         {
-            std::vector<NodePtr> result;
+            std::vector<Node*> result;
 
-            for (const CameraPtr& camera : cameras)
+            for (Camera* camera : cameras)
             {
                 Vector2 worldPosition = camera->convertNormalizedToWorld(position);
 
-                for (std::list<std::pair<NodePtr, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
+                for (std::list<std::pair<Node*, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
                 {
-                    const NodePtr& node = i->first;
+                    Node* node = i->first;
 
                     if (!node->isHidden() && node->isPickable() && node->pointOn(worldPosition))
                     {
@@ -142,11 +142,11 @@ namespace ouzel
             return result;
         }
 
-        std::set<NodePtr> Layer::pickNodes(const std::vector<Vector2>& edges) const
+        std::set<Node*> Layer::pickNodes(const std::vector<Vector2>& edges) const
         {
-            std::set<NodePtr> result;
+            std::set<Node*> result;
 
-            for (const CameraPtr& camera : cameras)
+            for (Camera* camera : cameras)
             {
                 std::vector<Vector2> worldEdges;
                 worldEdges.reserve(edges.size());
@@ -156,9 +156,9 @@ namespace ouzel
                     worldEdges.push_back(camera->convertNormalizedToWorld(edge));
                 }
 
-                for (std::list<std::pair<NodePtr, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
+                for (std::list<std::pair<Node*, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
                 {
-                    const NodePtr& node = i->first;
+                    Node* node = i->first;
 
                     if (!node->isHidden() && node->isPickable() && node->shapeOverlaps(worldEdges))
                     {
@@ -177,7 +177,7 @@ namespace ouzel
 
         void Layer::recalculateProjection()
         {
-            for (const CameraPtr& camera : cameras)
+            for (Camera* camera : cameras)
             {
                 camera->recalculateProjection();
             }

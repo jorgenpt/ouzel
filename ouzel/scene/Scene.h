@@ -20,6 +20,7 @@ namespace ouzel
     namespace scene
     {
         class SceneManager;
+        class Layer;
 
         class Scene: public Noncopyable
         {
@@ -30,16 +31,16 @@ namespace ouzel
 
             virtual void draw();
 
-            void addLayer(const LayerPtr& layer);
-            void removeLayer(const LayerPtr& layer);
+            void addLayer(Layer& layer);
+            void removeLayer(Layer& layer);
             void removeAllLayers();
-            bool hasLayer(const LayerPtr& layer) const;
-            const std::list<LayerPtr>& getLayers() const { return layers; }
+            bool hasLayer(Layer& layer) const;
+            const std::list<Layer*>& getLayers() const { return layers; }
 
             virtual void recalculateProjection();
 
-            NodePtr pickNode(const Vector2& position) const;
-            std::set<NodePtr> pickNodes(const std::vector<Vector2>& edges) const;
+            Node* pickNode(const Vector2& position) const;
+            std::set<Node*> pickNodes(const std::vector<Vector2>& edges) const;
 
         protected:
             virtual void enter();
@@ -49,20 +50,20 @@ namespace ouzel
             bool handleMouse(Event::Type type, const MouseEvent& event);
             bool handleTouch(Event::Type type, const TouchEvent& event);
 
-            scene::NodePtr getPointerOnNode(uint64_t pointerId) const;
-            scene::NodePtr getPointerDownOnNode(uint64_t pointerId) const;
+            Node* getPointerOnNode(uint64_t pointerId) const;
+            Node* getPointerDownOnNode(uint64_t pointerId) const;
 
-            void pointerEnterNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position);
-            void pointerLeaveNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position);
-            void pointerDownOnNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position);
-            void pointerUpOnNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position);
-            void pointerDragNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position);
+            void pointerEnterNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
+            void pointerLeaveNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
+            void pointerDownOnNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
+            void pointerUpOnNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
+            void pointerDragNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
 
-            std::list<LayerPtr> layers;
+            std::list<Layer*> layers;
             ouzel::EventHandler eventHandler;
 
-            std::map<uint64_t, scene::NodeWeakPtr> pointerOnNodes;
-            std::map<uint64_t, scene::NodeWeakPtr> pointerDownOnNodes;
+            std::map<uint64_t, Node*> pointerOnNodes;
+            std::map<uint64_t, Node*> pointerDownOnNodes;
 
             bool entered = false;
         };

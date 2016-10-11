@@ -24,7 +24,7 @@ namespace ouzel
         {
             if (entered)
             {
-                for (const LayerPtr& layer : layers)
+                for (Layer* layer : layers)
                 {
                     layer->leave();
                 }
@@ -33,35 +33,35 @@ namespace ouzel
 
         void Scene::draw()
         {
-            layers.sort([](LayerPtr a, LayerPtr b) {
+            layers.sort([](Layer* a, Layer* b) {
                 return a->getOrder() > b->getOrder();
             });
 
-            for (const LayerPtr& layer : layers)
+            for (Layer* layer : layers)
             {
                 layer->draw();
             }
         }
 
-        void Scene::addLayer(const LayerPtr& layer)
+        void Scene::addLayer(Layer& layer)
         {
             if (!hasLayer(layer))
             {
-                layers.push_back(layer);
+                layers.push_back(&layer);
 
-                if (entered) layer->enter();
+                if (entered) layer.enter();
             }
         }
 
-        void Scene::removeLayer(const LayerPtr& layer)
+        void Scene::removeLayer(Layer& layer)
         {
-            std::list<LayerPtr>::iterator i = std::find(layers.begin(), layers.end(), layer);
+            std::list<Layer*>::iterator i = std::find(layers.begin(), layers.end(), &layer);
 
             if (i != layers.end())
             {
                 if (entered)
                 {
-                    layer->leave();
+                    layer.leave();
                 }
 
                 layers.erase(i);
@@ -72,7 +72,7 @@ namespace ouzel
         {
             if (entered)
             {
-                for (const LayerPtr& layer : layers)
+                for (Layer* layer : layers)
                 {
                     layer->leave();
                 }
@@ -81,28 +81,28 @@ namespace ouzel
             layers.clear();
         }
 
-        bool Scene::hasLayer(const LayerPtr& layer) const
+        bool Scene::hasLayer(Layer& layer) const
         {
-            std::list<LayerPtr>::const_iterator i = std::find(layers.begin(), layers.end(), layer);
+            std::list<Layer*>::const_iterator i = std::find(layers.begin(), layers.end(), &layer);
 
             return i != layers.end();
         }
 
         void Scene::recalculateProjection()
         {
-            for (const LayerPtr& layer : layers)
+            for (Layer* layer : layers)
             {
                 layer->recalculateProjection();
             }
         }
 
-        NodePtr Scene::pickNode(const Vector2& position) const
+        Node* Scene::pickNode(const Vector2& position) const
         {
-            for (std::list<LayerPtr>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
+            for (std::list<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
             {
-                const LayerPtr& layer = *i;
+                Layer* layer = *i;
 
-                if (NodePtr result = layer->pickNode(position))
+                if (Node* result = layer->pickNode(position))
                 {
                     return result;
                 }
@@ -111,13 +111,13 @@ namespace ouzel
             return nullptr;
         }
 
-        std::set<NodePtr> Scene::pickNodes(const std::vector<Vector2>& edges) const
+        std::set<Node*> Scene::pickNodes(const std::vector<Vector2>& edges) const
         {
-            std::set<NodePtr> result;
+            std::set<Node*> result;
 
-            for (std::list<LayerPtr>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
+            for (std::list<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
             {
-                std::set<NodePtr> nodes = (*i)->pickNodes(edges);
+                std::set<Node*> nodes = (*i)->pickNodes(edges);
 
                 result.insert(nodes.begin(), nodes.end());
             }
@@ -132,7 +132,7 @@ namespace ouzel
             recalculateProjection();
             sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
-            for (const LayerPtr& layer : layers)
+            for (Layer* layer : layers)
             {
                 layer->enter();
             }
@@ -144,7 +144,7 @@ namespace ouzel
 
             sharedEngine->getEventDispatcher()->removeEventHandler(eventHandler);
 
-            for (const LayerPtr& layer : layers)
+            for (Layer* layer : layers)
             {
                 layer->leave();
             }
@@ -166,22 +166,22 @@ namespace ouzel
             {
                 case Event::Type::MOUSE_DOWN:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerDownOnNode(0, node, event.position);
                     break;
                 }
                 case Event::Type::MOUSE_UP:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerUpOnNode(0, node, event.position);
                     break;
                 }
                 case Event::Type::MOUSE_MOVE:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerEnterNode(0, node, event.position);
 
-                    if (scene::NodePtr pointerDownOnNode = getPointerDownOnNode(0))
+                    if (scene::Node* pointerDownOnNode = getPointerDownOnNode(0))
                     {
                         pointerDragNode(0, pointerDownOnNode, event.position);
                     }
@@ -200,22 +200,22 @@ namespace ouzel
             {
                 case Event::Type::TOUCH_BEGIN:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerDownOnNode(event.touchId, node, event.position);
                     break;
                 }
                 case Event::Type::TOUCH_END:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerUpOnNode(event.touchId, node, event.position);
                     break;
                 }
                 case Event::Type::TOUCH_MOVE:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerEnterNode(0, node, event.position);
 
-                    if (scene::NodePtr pointerDownOnNode = getPointerDownOnNode(event.touchId))
+                    if (scene::Node* pointerDownOnNode = getPointerDownOnNode(event.touchId))
                     {
                         pointerDragNode(event.touchId, pointerDownOnNode, event.position);
                     }
@@ -223,7 +223,7 @@ namespace ouzel
                 }
                 case Event::Type::TOUCH_CANCEL:
                 {
-                    scene::NodePtr node = pickNode(event.position);
+                    scene::Node* node = pickNode(event.position);
                     pointerUpOnNode(event.touchId, node, event.position);
                     break;
                 }
@@ -234,37 +234,37 @@ namespace ouzel
             return true;
         }
 
-        scene::NodePtr Scene::getPointerOnNode(uint64_t pointerId) const
+        scene::Node* Scene::getPointerOnNode(uint64_t pointerId) const
         {
-            scene::NodePtr result;
+            scene::Node* result;
 
             auto i = pointerOnNodes.find(pointerId);
 
-            if (i != pointerOnNodes.end() && !i->second.expired())
+            if (i != pointerOnNodes.end())
             {
-                result = i->second.lock();
+                result = i->second;
             }
 
             return result;
         }
 
-        scene::NodePtr Scene::getPointerDownOnNode(uint64_t pointerId) const
+        scene::Node* Scene::getPointerDownOnNode(uint64_t pointerId) const
         {
-            scene::NodePtr result;
+            scene::Node* result;
 
             auto i = pointerDownOnNodes.find(pointerId);
 
-            if (i != pointerDownOnNodes.end() && !i->second.expired())
+            if (i != pointerDownOnNodes.end())
             {
-                result = i->second.lock();
+                result = i->second;
             }
 
             return result;
         }
 
-        void Scene::pointerEnterNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position)
+        void Scene::pointerEnterNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
         {
-            scene::NodePtr pointerOnNode = getPointerOnNode(pointerId);
+            scene::Node* pointerOnNode = getPointerOnNode(pointerId);
 
             if (pointerOnNode)
             {
@@ -292,7 +292,7 @@ namespace ouzel
             }
         }
 
-        void Scene::pointerLeaveNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position)
+        void Scene::pointerLeaveNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
         {
             if (node && node->isReceivingInput())
             {
@@ -308,7 +308,7 @@ namespace ouzel
             pointerOnNodes.erase(pointerId);
         }
 
-        void Scene::pointerDownOnNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position)
+        void Scene::pointerDownOnNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
         {
             pointerDownOnNodes[pointerId] = node;
 
@@ -324,9 +324,9 @@ namespace ouzel
             }
         }
 
-        void Scene::pointerUpOnNode(uint64_t pointerId, const scene::NodePtr& node, const Vector2& position)
+        void Scene::pointerUpOnNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
         {
-            scene::NodePtr pointerDownOnNode = getPointerDownOnNode(pointerId);
+            scene::Node* pointerDownOnNode = getPointerDownOnNode(pointerId);
 
             if (pointerDownOnNode && pointerDownOnNode->isReceivingInput())
             {
@@ -353,7 +353,7 @@ namespace ouzel
             pointerDownOnNodes.erase(pointerId);
         }
 
-        void Scene::pointerDragNode(uint64_t, const scene::NodePtr& node, const Vector2& position)
+        void Scene::pointerDragNode(uint64_t, scene::Node* node, const Vector2& position)
         {
             if (node && node->isReceivingInput())
             {

@@ -31,33 +31,33 @@ namespace ouzel
             sharedEngine->getEventDispatcher()->removeEventHandler(eventHandler);
         }
 
-        bool Menu::addWidget(const WidgetPtr& widget)
+        bool Menu::addWidget(Widget& widget)
         {
             if (!addChild(widget))
             {
                 return false;
             }
 
-            widgets.push_back(widget);
+            widgets.push_back(&widget);
 
             if (!selectedWidget)
             {
-                selectWidget(widget);
+                selectWidget(&widget);
             }
 
             return true;
         }
 
-        bool Menu::removeWidget(const WidgetPtr& widget)
+        bool Menu::removeWidget(Widget& widget)
         {
             if (!removeChild(widget))
             {
                 return false;
             }
 
-            widgets.remove(widget);
+            widgets.remove(&widget);
 
-            if (selectedWidget == widget)
+            if (selectedWidget == &widget)
             {
                 selectWidget(nullptr);
             }
@@ -65,11 +65,11 @@ namespace ouzel
             return true;
         }
 
-        void Menu::selectWidget(const WidgetPtr& widget)
+        void Menu::selectWidget(Widget* widget)
         {
             selectedWidget = widget;
 
-            for (const WidgetPtr& childWidget : widgets)
+            for (Widget* childWidget : widgets)
             {
                 childWidget->setSelected(childWidget == selectedWidget);
             }
@@ -79,7 +79,7 @@ namespace ouzel
         {
             if (widgets.empty()) return;
 
-            std::list<WidgetPtr>::iterator widgetIterator = widgets.end();
+            std::list<Widget*>::iterator widgetIterator = widgets.end();
 
             if (selectedWidget)
             {
@@ -96,7 +96,7 @@ namespace ouzel
         {
             if (widgets.empty()) return;
 
-            std::list<WidgetPtr>::iterator widgetIterator = widgets.end();
+            std::list<Widget*>::iterator widgetIterator = widgets.end();
 
             if (selectedWidget)
             {
@@ -162,7 +162,7 @@ namespace ouzel
             {
                 if (std::find(widgets.begin(), widgets.end(), event.node) != widgets.end())
                 {
-                    selectWidget(std::static_pointer_cast<Widget>(event.node));
+                    selectWidget(static_cast<Widget*>(event.node));
                 }
             }
 

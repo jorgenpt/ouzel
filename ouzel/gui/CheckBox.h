@@ -6,6 +6,7 @@
 #include "gui/Widget.h"
 #include "events/Event.h"
 #include "events/EventHandler.h"
+#include "scene/Sprite.h"
 
 namespace ouzel
 {
@@ -27,11 +28,11 @@ namespace ouzel
 
             void updateSprite();
 
-            scene::SpritePtr normalSprite;
-            scene::SpritePtr selectedSprite;
-            scene::SpritePtr pressedSprite;
-            scene::SpritePtr disabledSprite;
-            scene::SpritePtr tickSprite;
+            std::unique_ptr<scene::Sprite> normalSprite;
+            std::unique_ptr<scene::Sprite> selectedSprite;
+            std::unique_ptr<scene::Sprite> pressedSprite;
+            std::unique_ptr<scene::Sprite> disabledSprite;
+            std::unique_ptr<scene::Sprite> tickSprite;
 
             EventHandler eventHandler;
 

@@ -11,14 +11,23 @@ public:
     GUISample(Samples& pSamples);
     virtual ~GUISample();
 
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
 
 private:
     Samples& samples;
-    ouzel::gui::ButtonPtr backButton;
+
+    ouzel::scene::Camera camera;
+    ouzel::scene::Layer guiLayer;
+
+    ouzel::gui::Menu menu;
+    ouzel::gui::Label label;
+    ouzel::gui::Label label2;
+    ouzel::gui::Label label3;
+
+    ouzel::gui::Button backButton;
     ouzel::EventHandler eventHandler;
 
-    ouzel::gui::ButtonPtr button;
-    ouzel::gui::ButtonPtr fullscreenButton;
-    ouzel::gui::CheckBoxPtr checkBox;
+    ouzel::gui::Button button;
+    ouzel::gui::Button fullscreenButton;
+    ouzel::gui::CheckBox checkBox;
 };

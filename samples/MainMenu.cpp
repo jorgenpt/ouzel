@@ -13,43 +13,41 @@ using namespace std;
 using namespace ouzel;
 
 MainMenu::MainMenu(Samples& pSamples):
-    samples(pSamples)
+    samples(pSamples),
+    spritesButton("button.png", "button_selected.png", "button_down.png", "", "Sprites", graphics::Color(20, 0, 0, 255), "arial.fnt"),
+    GUIButton("button.png", "button_selected.png", "button_down.png", "", "GUI", graphics::Color(20, 0, 0, 255), "arial.fnt"),
+    renderTargetButton("button.png", "button_selected.png", "button_down.png", "", "Render target", graphics::Color(20, 0, 0, 255), "arial.fnt"),
+    animationsButton("button.png", "button_selected.png", "button_down.png", "", "Animations", graphics::Color(20, 0, 0, 255), "arial.fnt"),
+    inputButton("button.png", "button_selected.png", "button_down.png", "", "Input", graphics::Color(20, 0, 0, 255), "arial.fnt"),
+    soundButton("button.png", "button_selected.png", "button_down.png", "", "Sound", graphics::Color(20, 0, 0, 255), "arial.fnt")
 {
     eventHandler.uiHandler = bind(&MainMenu::handleUI, this, placeholders::_1, placeholders::_2);
 
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
-    scene::LayerPtr layer = make_shared<scene::Layer>();
     addLayer(layer);
 
-    layer->addCamera(make_shared<scene::Camera>());
+    layer.addCamera(camera);
 
-    gui::MenuPtr menu = std::make_shared<gui::Menu>();
-    layer->addChild(menu);
+    layer.addChild(menu);
 
-    spritesButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Sprites", graphics::Color(20, 0, 0, 255), "arial.fnt");
-    spritesButton->setPosition(Vector2(0.0f, 80.0f));
-    menu->addWidget(spritesButton);
+    spritesButton.setPosition(Vector2(0.0f, 80.0f));
+    menu.addWidget(spritesButton);
 
-    GUIButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "GUI", graphics::Color(20, 0, 0, 255), "arial.fnt");
-    GUIButton->setPosition(Vector2(0.0f, 40.0f));
-    menu->addWidget(GUIButton);
+    GUIButton.setPosition(Vector2(0.0f, 40.0f));
+    menu.addWidget(GUIButton);
 
-    renderTargetButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Render target", graphics::Color(20, 0, 0, 255), "arial.fnt");
-    renderTargetButton->setPosition(Vector2(0.0f, 0.0f));
-    menu->addWidget(renderTargetButton);
+    renderTargetButton.setPosition(Vector2(0.0f, 0.0f));
+    menu.addWidget(renderTargetButton);
 
-    animationsButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Animations", graphics::Color(20, 0, 0, 255), "arial.fnt");
-    animationsButton->setPosition(Vector2(0.0f, -40.0f));
-    menu->addWidget(animationsButton);
+    animationsButton.setPosition(Vector2(0.0f, -40.0f));
+    menu.addWidget(animationsButton);
 
-    inputButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Input", graphics::Color(20, 0, 0, 255), "arial.fnt");
-    inputButton->setPosition(Vector2(0.0f, -80.0f));
-    menu->addWidget(inputButton);
+    inputButton.setPosition(Vector2(0.0f, -80.0f));
+    menu.addWidget(inputButton);
 
-    soundButton = make_shared<gui::Button>("button.png", "button_selected.png", "button_down.png", "", "Sound", graphics::Color(20, 0, 0, 255), "arial.fnt");
-    soundButton->setPosition(Vector2(0.0f, -120.0f));
-    menu->addWidget(soundButton);
+    soundButton.setPosition(Vector2(0.0f, -120.0f));
+    menu.addWidget(soundButton);
 }
 
 MainMenu::~MainMenu()
@@ -62,27 +60,27 @@ bool MainMenu::handleUI(Event::Type type, const UIEvent& event)
     {
         scene::ScenePtr newScene;
 
-        if (event.node == spritesButton)
+        if (event.node == &spritesButton)
         {
             newScene = make_shared<SpritesSample>(samples);
         }
-        else if (event.node == GUIButton)
+        else if (event.node == &GUIButton)
         {
             newScene = make_shared<GUISample>(samples);
         }
-        else if (event.node == renderTargetButton)
+        else if (event.node == &renderTargetButton)
         {
             newScene = make_shared<RTSample>(samples);
         }
-        else if (event.node == animationsButton)
+        else if (event.node == &animationsButton)
         {
             newScene = make_shared<AnimationsSample>(samples);
         }
-        else if (event.node == inputButton)
+        else if (event.node == &inputButton)
         {
             newScene = make_shared<InputSample>(samples);
         }
-        else if (event.node == soundButton)
+        else if (event.node == &soundButton)
         {
             newScene = make_shared<SoundSample>(samples);
         }

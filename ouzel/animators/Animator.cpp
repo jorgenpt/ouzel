@@ -2,6 +2,7 @@
 // This file is part of the Ouzel engine.
 
 #include "Animator.h"
+#include "scene/Node.h"
 #include "utils/Utils.h"
 #include "core/Engine.h"
 
@@ -16,6 +17,7 @@ namespace ouzel
 
         Animator::~Animator()
         {
+            if (node) node->removeAnimation();
         }
 
         void Animator::update(float delta)
@@ -40,13 +42,18 @@ namespace ouzel
             }
         }
 
-        void Animator::start(const NodePtr& targetNode)
+        void Animator::start(Node* targetNode)
         {
             if (!running)
             {
                 running = true;
                 node = targetNode;
             }
+        }
+
+        void Animator::remove()
+        {
+            node = nullptr;
         }
 
         void Animator::resume()

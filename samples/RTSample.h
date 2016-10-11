@@ -15,6 +15,23 @@ public:
 
 private:
     Samples& samples;
-    ouzel::gui::ButtonPtr backButton;
+    ouzel::gui::Button backButton;
     ouzel::EventHandler eventHandler;
+
+    ouzel::scene::Layer rtLayer;
+    ouzel::scene::Camera rtCamera;
+
+    ouzel::scene::Camera camera1;
+    ouzel::scene::Camera camera2;
+    ouzel::scene::Layer layer;
+
+    ouzel::scene::Sprite characterSprite;
+    ouzel::scene::Node rtCharacter;
+
+    std::auto_ptr<ouzel::scene::Sprite> rtSprite;
+    ouzel::scene::Node rtNode;
+
+    ouzel::scene::Camera guiCamera;
+    ouzel::scene::Layer guiLayer;
+    ouzel::gui::Menu menu;
 };

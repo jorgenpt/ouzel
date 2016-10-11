@@ -3,7 +3,6 @@
 
 #include "CheckBox.h"
 #include "core/Engine.h"
-#include "scene/Sprite.h"
 #include "events/EventDispatcher.h"
 #include "utils/Utils.h"
 
@@ -19,46 +18,46 @@ namespace ouzel
 
             if (!normalImage.empty())
             {
-                normalSprite = std::make_shared<scene::Sprite>();
+                normalSprite.reset(new scene::Sprite());
                 if (normalSprite->initFromFile(normalImage, false))
                 {
-                    addComponent(normalSprite);
+                    addComponent(*normalSprite);
                 }
             }
 
             if (!selectedImage.empty())
             {
-                selectedSprite = std::make_shared<scene::Sprite>();
+                selectedSprite.reset(new scene::Sprite());
                 if (selectedSprite->initFromFile(selectedImage, false))
                 {
-                    addComponent(selectedSprite);
+                    addComponent(*selectedSprite);
                 }
             }
 
             if (!pressedImage.empty())
             {
-                pressedSprite = std::make_shared<scene::Sprite>();
+                pressedSprite.reset(new scene::Sprite());
                 if (pressedSprite->initFromFile(pressedImage, false))
                 {
-                    addComponent(pressedSprite);
+                    addComponent(*pressedSprite);
                 }
             }
 
             if (!disabledImage.empty())
             {
-                disabledSprite = std::make_shared<scene::Sprite>();
+                disabledSprite.reset(new scene::Sprite());
                 if (disabledSprite->initFromFile(disabledImage, false))
                 {
-                    addComponent(disabledSprite);
+                    addComponent(*disabledSprite);
                 }
             }
 
             if (!tickImage.empty())
             {
-                tickSprite = std::make_shared<scene::Sprite>();
+                tickSprite.reset(new scene::Sprite());
                 if (tickSprite->initFromFile(tickImage, false))
                 {
-                    addComponent(tickSprite);
+                    addComponent(*tickSprite);
                 }
             }
 
@@ -94,7 +93,7 @@ namespace ouzel
         {
             if (!enabled) return true;
 
-            if (event.node.get() == this)
+            if (event.node == this)
             {
                 if (type == Event::Type::UI_ENTER_NODE)
                 {
@@ -127,7 +126,7 @@ namespace ouzel
 
                     Event changeEvent;
                     changeEvent.type = Event::Type::UI_WIDGET_CHANGE;
-                    changeEvent.uiEvent.node = std::static_pointer_cast<Node>(shared_from_this());
+                    changeEvent.uiEvent.node = this;
                     sharedEngine->getEventDispatcher()->postEvent(changeEvent);
                 }
             }

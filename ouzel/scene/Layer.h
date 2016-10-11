@@ -18,6 +18,7 @@ namespace ouzel
     namespace scene
     {
         class Scene;
+        class Camera;
 
         class Layer: public NodeContainer
         {
@@ -28,17 +29,17 @@ namespace ouzel
 
             virtual void draw();
 
-            virtual bool addChild(const NodePtr& node) override;
+            virtual bool addChild(Node& node) override;
 
-            void addToDrawQueue(const NodePtr& node, float depth);
+            void addToDrawQueue(Node& node, float depth);
 
-            void addCamera(const CameraPtr& camera);
-            void removeCamera(const CameraPtr& camera);
-            const std::set<CameraPtr>& getCameras() const { return cameras; }
+            void addCamera(Camera& camera);
+            void removeCamera(Camera& camera);
+            const std::set<Camera*>& getCameras() const { return cameras; }
 
-            NodePtr pickNode(const Vector2& position) const;
-            std::vector<NodePtr> pickNodes(const Vector2& position) const;
-            std::set<NodePtr> pickNodes(const std::vector<Vector2>& edges) const;
+            Node* pickNode(const Vector2& position) const;
+            std::vector<Node*> pickNodes(const Vector2& position) const;
+            std::set<Node*> pickNodes(const std::vector<Vector2>& edges) const;
 
             int32_t getOrder() const { return order; }
             void setOrder(int32_t newOrder);
@@ -50,8 +51,8 @@ namespace ouzel
             virtual void recalculateProjection();
             virtual void enter() override;
 
-            std::set<CameraPtr> cameras;
-            std::list<std::pair<NodePtr, float>> drawQueue;
+            std::set<Camera*> cameras;
+            std::list<std::pair<Node*, float>> drawQueue;
 
             int32_t order = 0;
             bool wireframe = false;

@@ -14,7 +14,7 @@ namespace ouzel
         public:
             Fade(float pLength, float pOpacity, bool pRelative = false);
 
-            virtual void start(const NodePtr& targetNode) override;
+            virtual void start(Node* targetNode) override;
 
         protected:
             virtual void updateProgress() override;

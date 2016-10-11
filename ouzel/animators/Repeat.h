@@ -15,7 +15,7 @@ namespace ouzel
         public:
             Repeat(const AnimatorPtr& pAnimator, uint32_t pCount = 0);
 
-            virtual void start(const NodePtr& targetNode) override;
+            virtual void start(Node* targetNode) override;
             virtual void reset() override;
 
         protected:

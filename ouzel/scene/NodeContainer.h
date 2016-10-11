@@ -15,23 +15,23 @@ namespace ouzel
         class Layer;
         class Node;
 
-        class NodeContainer: public Noncopyable, public std::enable_shared_from_this<NodeContainer>
+        class NodeContainer: public Noncopyable
         {
         public:
             NodeContainer();
             virtual ~NodeContainer();
 
-            virtual bool addChild(const NodePtr& node);
-            virtual bool removeChild(const NodePtr& node);
+            virtual bool addChild(Node& node);
+            virtual bool removeChild(Node& node);
             virtual void removeAllChildren();
-            virtual bool hasChild(const NodePtr& node, bool recursive = false) const;
-            virtual const std::list<NodePtr>& getChildren() const { return children; }
+            virtual bool hasChild(Node& node, bool recursive = false) const;
+            virtual const std::list<Node*>& getChildren() const { return children; }
 
         protected:
             virtual void enter();
             virtual void leave();
 
-            std::list<NodePtr> children;
+            std::list<Node*> children;
             bool entered = false;
         };
     } // namespace scene

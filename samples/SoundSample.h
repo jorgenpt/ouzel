@@ -15,9 +15,15 @@ public:
 
 private:
     Samples& samples;
-    ouzel::gui::ButtonPtr backButton;
-    ouzel::gui::ButtonPtr jumpButton;
-    ouzel::gui::ButtonPtr ambientButton;
+
+    ouzel::scene::Layer guiLayer;
+    ouzel::scene::Camera camera;
+
+    ouzel::gui::Menu menu;
+
+    ouzel::gui::Button backButton;
+    ouzel::gui::Button jumpButton;
+    ouzel::gui::Button ambientButton;
     ouzel::EventHandler eventHandler;
 
     ouzel::audio::SoundPtr jumpSound;

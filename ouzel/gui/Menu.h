@@ -17,8 +17,8 @@ namespace ouzel
             Menu();
             virtual ~Menu();
 
-            virtual bool addWidget(const WidgetPtr& widget);
-            virtual bool removeWidget(const WidgetPtr& widget);
+            virtual bool addWidget(Widget& widget);
+            virtual bool removeWidget(Widget& widget);
 
             virtual void selectNextWidget();
             virtual void selectPreviousWidget();
@@ -27,14 +27,14 @@ namespace ouzel
             virtual void enter() override;
             virtual void leave() override;
 
-            void selectWidget(const WidgetPtr& widget);
+            void selectWidget(Widget* widget);
 
             bool handleKeyboard(Event::Type type, const KeyboardEvent& event);
             bool handleGamepad(Event::Type type, const GamepadEvent& event);
             bool handleUI(Event::Type type, const UIEvent& event);
 
-            std::list<WidgetPtr> widgets;
-            WidgetPtr selectedWidget;
+            std::list<Widget*> widgets;
+            Widget* selectedWidget = nullptr;
 
             EventHandler eventHandler;
         };
