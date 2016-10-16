@@ -9,7 +9,6 @@ class RTSample: public ouzel::scene::Scene
 {
 public:
     RTSample(Samples& pSamples);
-    virtual ~RTSample();
 
 private:
     bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;

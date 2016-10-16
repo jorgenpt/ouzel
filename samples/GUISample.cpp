@@ -54,10 +54,6 @@ GUISample::GUISample(Samples& pSamples):
     menu.addWidget(backButton);
 }
 
-GUISample::~GUISample()
-{
-}
-
 bool GUISample::handleUI(Event::Type type, const UIEvent& event)
 {
     if (type == Event::Type::UI_CLICK_NODE)

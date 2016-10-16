@@ -59,10 +59,6 @@ SpritesSample::SpritesSample(Samples& pSamples):
     menu.addWidget(backButton);
 }
 
-SpritesSample::~SpritesSample()
-{
-}
-
 bool SpritesSample::handleUI(Event::Type type, const UIEvent& event)
 {
     if (type == Event::Type::UI_CLICK_NODE)

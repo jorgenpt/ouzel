@@ -40,10 +40,6 @@ InputSample::InputSample(Samples& pSamples):
     menu.addWidget(backButton);
 }
 
-InputSample::~InputSample()
-{
-}
-
 bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event)
 {
     if (type == Event::Type::KEY_DOWN)

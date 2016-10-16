@@ -68,10 +68,6 @@ AnimationsSample::AnimationsSample(Samples& pSamples):
     menu.addWidget(backButton);
 }
 
-AnimationsSample::~AnimationsSample()
-{
-}
-
 bool AnimationsSample::handleUI(Event::Type type, const UIEvent& event) const
 {
     if (type == Event::Type::UI_CLICK_NODE && event.node == &backButton)

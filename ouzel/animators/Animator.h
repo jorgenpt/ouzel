@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include "utils/Noncopyable.h"
 #include "utils/Types.h"
 
 namespace ouzel
@@ -12,7 +13,7 @@ namespace ouzel
     {
         class Node;
         
-        class Animator
+        class Animator: public Noncopyable
         {
         public:
             Animator(float pLength);
