@@ -99,6 +99,9 @@ namespace ouzel
 
             virtual void updateTransform(const Matrix4& newParentTransform);
 
+            Vector2 getWorldPosition() const;
+            float getWorldZ() const { return parentZ + z; }
+
             Vector2 convertWorldToLocal(const Vector2& worldPosition) const;
             Vector2 convertLocalToWorld(const Vector2& localPosition) const;
 
@@ -123,7 +126,6 @@ namespace ouzel
             virtual void visit(const Matrix4& newParentTransform,
                                bool parentTransformDirty,
                                Camera* camera,
-                               Layer* currentLayer,
                                float depth);
             virtual void draw(Camera* camera);
             virtual void drawWireframe(Camera* camera);
@@ -160,6 +162,7 @@ namespace ouzel
             Vector2 scale = Vector2(1.0f, 1.0f);
             graphics::Color color = graphics::Color::WHITE;
             float opacity = 1.0f;
+            float parentZ = 0.0f;
             float z = 0.0f;
 
             AnimatorPtr currentAnimator;

@@ -1,6 +1,7 @@
 // Copyright (C) 2016 Elviss Strazdins
 // This file is part of the Ouzel engine.
 
+#include <algorithm>
 #include "Layer.h"
 #include "core/Engine.h"
 #include "Node.h"
@@ -28,32 +29,30 @@ namespace ouzel
 
         void Layer::draw()
         {
-            drawQueue.clear();
-
             for (Camera* camera : cameras)
             {
+                camera->clearDrawQueue();
+                
                 for (Node* child : children)
                 {
                     if (!child->isHidden())
                     {
-                        child->visit(Matrix4::IDENTITY, false, camera, this, 0.0f);
+                        child->visit(Matrix4::IDENTITY, false, camera, 0.0f);
                     }
                 }
 
-                drawQueue.sort([](const std::pair<Node*, float>& a, const std::pair<Node*, float>& b) {
-                    return a.second > b.second;
-                });
+                const auto& drawQueue = camera->getDrawQueue();
 
                 for (const auto& node : drawQueue)
                 {
-                    node.first->draw(camera);
+                    node->draw(camera);
                 }
 
                 if (wireframe)
                 {
                     for (const auto& node : drawQueue)
                     {
-                        node.first->drawWireframe(camera);
+                        node->drawWireframe(camera);
                     }
                 }
             }
@@ -71,11 +70,6 @@ namespace ouzel
             {
                 return false;
             }
-        }
-
-        void Layer::addToDrawQueue(Node& node, float depth)
-        {
-            drawQueue.push_back({ &node, depth });
         }
 
         void Layer::addCamera(Camera& camera)
@@ -102,19 +96,17 @@ namespace ouzel
 
         Node* Layer::pickNode(const Vector2& position) const
         {
-            for (Camera* camera : cameras)
+            for (auto i = cameras.rbegin(); i != cameras.rend(); ++i)
             {
+                const Camera* camera = *i;
+
+                std::vector<Node*> nodes;
+
                 Vector2 worldPosition = camera->convertNormalizedToWorld(position);
 
-                for (std::list<std::pair<Node*, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
-                {
-                    Node* node = i->first;
+                NodeContainer::pickNodes(worldPosition, nodes);
 
-                    if (!node->isHidden() && node->isPickable() && node->pointOn(worldPosition))
-                    {
-                        return node;
-                    }
-                }
+                if (!nodes.empty()) return nodes.front();
             }
 
             return nullptr;
@@ -124,30 +116,29 @@ namespace ouzel
         {
             std::vector<Node*> result;
 
-            for (Camera* camera : cameras)
+            for (auto i = cameras.rbegin(); i != cameras.rend(); ++i)
             {
+                const Camera* camera = *i;
+
                 Vector2 worldPosition = camera->convertNormalizedToWorld(position);
 
-                for (std::list<std::pair<Node*, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
-                {
-                    Node* node = i->first;
+                std::vector<Node*> nodes;
+                NodeContainer::pickNodes(worldPosition, nodes);
 
-                    if (!node->isHidden() && node->isPickable() && node->pointOn(worldPosition))
-                    {
-                        result.push_back(node);
-                    }
-                }
+                result.insert(result.end(), nodes.begin(), nodes.end());
             }
 
             return result;
         }
 
-        std::set<Node*> Layer::pickNodes(const std::vector<Vector2>& edges) const
+        std::vector<Node*> Layer::pickNodes(const std::vector<Vector2>& edges) const
         {
-            std::set<Node*> result;
+            std::vector<Node*> result;
 
-            for (Camera* camera : cameras)
+            for (auto i = cameras.rbegin(); i != cameras.rend(); ++i)
             {
+                const Camera* camera = *i;
+                
                 std::vector<Vector2> worldEdges;
                 worldEdges.reserve(edges.size());
 
@@ -156,15 +147,10 @@ namespace ouzel
                     worldEdges.push_back(camera->convertNormalizedToWorld(edge));
                 }
 
-                for (std::list<std::pair<Node*, float>>::const_reverse_iterator i = drawQueue.rbegin(); i != drawQueue.rend(); ++i)
-                {
-                    Node* node = i->first;
+                std::vector<Node*> nodes;
+                NodeContainer::pickNodes(worldEdges, nodes);
 
-                    if (!node->isHidden() && node->isPickable() && node->shapeOverlaps(worldEdges))
-                    {
-                        result.insert(node);
-                    }
-                }
+                result.insert(result.end(), nodes.begin(), nodes.end());
             }
 
             return result;

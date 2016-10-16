@@ -31,15 +31,13 @@ namespace ouzel
 
             virtual bool addChild(Node& node) override;
 
-            void addToDrawQueue(Node& node, float depth);
-
             void addCamera(Camera& camera);
             void removeCamera(Camera& camera);
             const std::set<Camera*>& getCameras() const { return cameras; }
 
             Node* pickNode(const Vector2& position) const;
             std::vector<Node*> pickNodes(const Vector2& position) const;
-            std::set<Node*> pickNodes(const std::vector<Vector2>& edges) const;
+            std::vector<Node*> pickNodes(const std::vector<Vector2>& edges) const;
 
             int32_t getOrder() const { return order; }
             void setOrder(int32_t newOrder);
@@ -52,7 +50,6 @@ namespace ouzel
             virtual void enter() override;
 
             std::set<Camera*> cameras;
-            std::list<std::pair<Node*, float>> drawQueue;
 
             int32_t order = 0;
             bool wireframe = false;

@@ -33,7 +33,7 @@ namespace ouzel
 
         void Scene::draw()
         {
-            layers.sort([](Layer* a, Layer* b) {
+            std::stable_sort(layers.begin(), layers.end(), [](Layer* a, Layer* b) {
                 return a->getOrder() > b->getOrder();
             });
 
@@ -55,7 +55,7 @@ namespace ouzel
 
         void Scene::removeLayer(Layer& layer)
         {
-            std::list<Layer*>::iterator i = std::find(layers.begin(), layers.end(), &layer);
+            std::vector<Layer*>::iterator i = std::find(layers.begin(), layers.end(), &layer);
 
             if (i != layers.end())
             {
@@ -83,7 +83,7 @@ namespace ouzel
 
         bool Scene::hasLayer(Layer& layer) const
         {
-            std::list<Layer*>::const_iterator i = std::find(layers.begin(), layers.end(), &layer);
+            std::vector<Layer*>::const_iterator i = std::find(layers.begin(), layers.end(), &layer);
 
             return i != layers.end();
         }
@@ -98,7 +98,7 @@ namespace ouzel
 
         Node* Scene::pickNode(const Vector2& position) const
         {
-            for (std::list<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
+            for (std::vector<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
             {
                 Layer* layer = *i;
 
@@ -111,15 +111,15 @@ namespace ouzel
             return nullptr;
         }
 
-        std::set<Node*> Scene::pickNodes(const std::vector<Vector2>& edges) const
+        std::vector<Node*> Scene::pickNodes(const std::vector<Vector2>& edges) const
         {
-            std::set<Node*> result;
+            std::vector<Node*> result;
 
-            for (std::list<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
+            for (auto i = layers.rbegin(); i != layers.rend(); ++i)
             {
-                std::set<Node*> nodes = (*i)->pickNodes(edges);
+                std::vector<Node*> nodes = (*i)->pickNodes(edges);
 
-                result.insert(nodes.begin(), nodes.end());
+                result.insert(result.end(), nodes.begin(), nodes.end());
             }
 
             return result;

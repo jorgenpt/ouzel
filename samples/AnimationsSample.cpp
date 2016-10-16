@@ -24,7 +24,6 @@ AnimationsSample::AnimationsSample(Samples& pSamples):
     shapeDrawable.rectangle(Rectangle(100.0f, 100.0f), graphics::Color::WHITE, false);
     shapeDrawable.line(Vector2(0.0f, 0.0f), Vector2(50.0f, 50.0f), graphics::Color::CYAN);
     shapeDrawable.point(Vector2(75.0f, 75.0f), graphics::Color::RED);
-
     shapeDrawable.circle(Vector2(75.0f, 75.0f), 20.0f, graphics::Color::BLUE);
     shapeDrawable.circle(Vector2(25.0f, 75.0f), 20.0f, graphics::Color::BLUE, true);
 

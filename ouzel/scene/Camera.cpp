@@ -220,5 +220,16 @@ namespace ouzel
 
             recalculateProjection();
         }
+
+        void Camera::addToDrawQueue(Node& node)
+        {
+            auto upperBound = std::upper_bound(drawQueue.begin(), drawQueue.end(), &node,
+                                               [](const Node* a, Node* b) {
+                                                   return a->getWorldZ() > b->getWorldZ();
+                                               });
+
+            drawQueue.insert(upperBound, &node);
+
+        }
     } // namespace scene
 } // namespace ouzel

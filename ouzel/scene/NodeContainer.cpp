@@ -40,7 +40,7 @@ namespace ouzel
 
         bool NodeContainer::removeChild(Node& node)
         {
-            std::list<Node*>::iterator i = std::find(children.begin(), children.end(), &node);
+            std::vector<Node*>::iterator i = std::find(children.begin(), children.end(), &node);
 
             if (i != children.end())
             {
@@ -71,7 +71,7 @@ namespace ouzel
 
         bool NodeContainer::hasChild(Node& node, bool recursive) const
         {
-            for (std::list<Node*>::const_iterator i = children.begin(); i != children.end(); ++i)
+            for (std::vector<Node*>::const_iterator i = children.begin(); i != children.end(); ++i)
             {
                 Node* child = *i;
 
@@ -101,6 +101,52 @@ namespace ouzel
             for (Node* node : children)
             {
                 node->leave();
+            }
+        }
+
+        void NodeContainer::pickNodes(const Vector2& position, std::vector<Node*>& nodes) const
+        {
+            for (auto i = children.rbegin(); i != children.rend(); ++i)
+            {
+                Node* node = *i;
+
+                if (!node->isHidden())
+                {
+                    if (node->isPickable() && node->pointOn(position))
+                    {
+                        auto upperBound = std::upper_bound(nodes.begin(), nodes.end(), node,
+                                                           [](const Node* a, Node* b) {
+                                                               return a->getWorldZ() < b->getWorldZ();
+                                                           });
+
+                        nodes.insert(upperBound, node);
+                    }
+
+                    node->pickNodes(position, nodes);
+                }
+            }
+        }
+
+        void NodeContainer::pickNodes(const std::vector<Vector2>& edges, std::vector<Node*>& nodes) const
+        {
+            for (auto i = children.rbegin(); i != children.rend(); ++i)
+            {
+                Node* node = *i;
+
+                if (!node->isHidden())
+                {
+                    if (node->isPickable() && node->shapeOverlaps(edges))
+                    {
+                        auto upperBound = std::upper_bound(nodes.begin(), nodes.end(), node,
+                                                           [](const Node* a, Node* b) {
+                                                               return a->getWorldZ() < b->getWorldZ();
+                                                           });
+
+                        nodes.insert(upperBound, node);
+                    }
+
+                    node->pickNodes(edges, nodes);
+                }
             }
         }
     } // namespace scene

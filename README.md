@@ -1,6 +1,6 @@
 <img src="https://github.com/elnormous/ouzel/blob/master/img/ouzel.png" alt="ouzel" width=128>
 
-# Ouzel v0.24
+# Ouzel v0.25
 
 [![Build Status](https://api.travis-ci.org/elnormous/ouzel.svg?branch=master)](https://travis-ci.org/elnormous/ouzel) [![Build Status](https://ci.appveyor.com/api/projects/status/dp8av7iegdjs6xuj?svg=true)](https://ci.appveyor.com/project/elnormous/ouzel)
 
@@ -11,7 +11,7 @@ Supported platforms:
 * Windows 7, 8, 10 
 * macOS 10.8+
 * Linux
-* iOS 7+
+* iOS 8+
 * tvOS 9+
 * Android 2.3+
 * Emscripten ([sample](http://www.ouzelengine.org/samples/))
@@ -94,6 +94,13 @@ To build Ouzel with Emscripten, pass "platform=emscripten" to "make" command, bu
 
 ```
 $ make platform=emscripten
+```
+
+You can build Android samples and run them on an Android device by executing the following commands in "samples/android" directory (Android SDK and NDK must be installed and added to PATH):
+
+```
+$ ant
+$ adb shell am start -n lv.elviss.ouzel/lv.elviss.ouzel.MainActivity
 ```
 
 ## System requirements
