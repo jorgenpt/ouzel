@@ -22,27 +22,22 @@ namespace ouzel
         {
             if (scene != &newScene)
             {
-                nextScene = &newScene;
-            }
-        }
-
-        void SceneManager::draw()
-        {
-            if (nextScene)
-            {
                 if (scene)
                 {
                     scene->leave();
                 }
 
-                scene = std::move(nextScene);
+                scene = &newScene;
 
                 if (scene)
                 {
                     scene->enter();
                 }
             }
+        }
 
+        void SceneManager::draw()
+        {
             if (scene)
             {
                 scene->draw();
