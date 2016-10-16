@@ -236,7 +236,7 @@ namespace ouzel
 
         scene::Node* Scene::getPointerOnNode(uint64_t pointerId) const
         {
-            scene::Node* result;
+            scene::Node* result = nullptr;
 
             auto i = pointerOnNodes.find(pointerId);
 
@@ -250,7 +250,7 @@ namespace ouzel
 
         scene::Node* Scene::getPointerDownOnNode(uint64_t pointerId) const
         {
-            scene::Node* result;
+            scene::Node* result = nullptr;
 
             auto i = pointerDownOnNodes.find(pointerId);
 
