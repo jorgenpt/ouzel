@@ -25,6 +25,8 @@ namespace ouzel
             {
                 camera->removeFromLayer();
             }
+
+            if (scene) scene->eraseLayer(*this);
         }
 
         void Layer::draw()
@@ -174,6 +176,16 @@ namespace ouzel
             NodeContainer::enter();
 
             recalculateProjection();
+        }
+
+        void Layer::addToScene(Scene& newScene)
+        {
+            scene = &newScene;
+        }
+
+        void Layer::removeFromScene()
+        {
+            scene = nullptr;
         }
     } // namespace scene
 } // namespace ouzel

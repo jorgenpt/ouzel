@@ -24,6 +24,7 @@ namespace ouzel
         class Scene: public Noncopyable
         {
             friend SceneManager;
+            friend Layer;
         public:
             Scene();
             virtual ~Scene();
@@ -44,6 +45,8 @@ namespace ouzel
             std::vector<Node*> pickNodes(const std::vector<Vector2>& edges) const;
 
         protected:
+            void eraseLayer(Layer& layer);
+
             virtual void enter();
             virtual void leave();
 

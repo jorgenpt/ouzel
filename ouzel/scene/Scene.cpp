@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Layer.h"
 #include "Camera.h"
+#include "SceneManager.h"
 #include "core/Engine.h"
 #include "events/EventDispatcher.h"
 
@@ -27,8 +28,11 @@ namespace ouzel
                 for (Layer* layer : layers)
                 {
                     layer->leave();
+                    layer->removeFromScene();
                 }
             }
+
+            sharedEngine->getSceneManager()->eraseScene(*this);
         }
 
         void Scene::draw()
@@ -45,9 +49,10 @@ namespace ouzel
 
         void Scene::addLayer(Layer& layer)
         {
-            if (!hasLayer(layer))
+            if (!layer.isAddedToScene() && !hasLayer(layer))
             {
                 layers.push_back(&layer);
+                layer.addToScene(*this);
 
                 if (entered) layer.enter();
             }
@@ -64,6 +69,18 @@ namespace ouzel
                     layer.leave();
                 }
 
+                layer.removeFromScene();
+
+                layers.erase(i);
+            }
+        }
+
+        void Scene::eraseLayer(Layer& layer)
+        {
+            std::vector<Layer*>::iterator i = std::find(layers.begin(), layers.end(), &layer);
+
+            if (i != layers.end())
+            {
                 layers.erase(i);
             }
         }

@@ -18,29 +18,65 @@ namespace ouzel
         {
         }
 
-        void SceneManager::setScene(Scene& newScene)
+        bool SceneManager::setScene(Scene& scene)
         {
-            if (scene != &newScene)
+            if (currentScene != &scene)
             {
-                if (scene)
+                if (currentScene)
                 {
-                    scene->leave();
+                    currentScene->leave();
                 }
 
-                scene = &newScene;
+                currentScene = &scene;
 
-                if (scene)
+                if (currentScene)
                 {
-                    scene->enter();
+                    currentScene->enter();
                 }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool SceneManager::removeScene(Scene& scene)
+        {
+            if (currentScene == &scene)
+            {
+                scene.leave();
+
+                currentScene = nullptr;
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool SceneManager::eraseScene(Scene& scene)
+        {
+            if (currentScene == &scene)
+            {
+                currentScene = nullptr;
+                
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
         void SceneManager::draw()
         {
-            if (scene)
+            if (currentScene)
             {
-                scene->draw();
+                currentScene->draw();
             }
         }
     } // namespace scene

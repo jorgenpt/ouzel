@@ -29,6 +29,7 @@ namespace ouzel
 
             virtual void draw();
 
+            bool isAddedToScene() const { return scene != nullptr; }
             virtual bool addChild(Node& node) override;
 
             void addCamera(Camera& camera);
@@ -46,8 +47,13 @@ namespace ouzel
             void setWireframe(bool newWireframe) { wireframe = newWireframe; }
 
         protected:
+            void addToScene(Scene& newScene);
+            void removeFromScene();
+
             virtual void recalculateProjection();
             virtual void enter() override;
+
+            Scene* scene = nullptr;
 
             std::set<Camera*> cameras;
 

@@ -17,18 +17,22 @@ namespace ouzel
         class SceneManager: public Noncopyable
         {
             friend Engine;
+            friend Scene;
         public:
             virtual ~SceneManager();
 
             void draw();
 
-            void setScene(Scene& newScene);
-            Scene* getScene() const { return scene; }
+            bool setScene(Scene& scene);
+            bool removeScene(Scene& scene);
+            Scene* getScene() const { return currentScene; }
 
         protected:
+            bool eraseScene(Scene& scene);
+
             SceneManager();
 
-            Scene* scene = nullptr;
+            Scene* currentScene = nullptr;
         };
     } // namespace scene
 } // namespace ouzel
