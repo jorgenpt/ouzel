@@ -18,6 +18,7 @@ namespace ouzel
 
         class NodeContainer: public Noncopyable
         {
+            friend Node;
         public:
             NodeContainer();
             virtual ~NodeContainer();
@@ -33,6 +34,7 @@ namespace ouzel
             virtual void pickNodes(const std::vector<Vector2>& edges, std::vector<Node*>& nodes) const;
 
         protected:
+            virtual bool eraseChild(Node& node);
             virtual void enter();
             virtual void leave();
 

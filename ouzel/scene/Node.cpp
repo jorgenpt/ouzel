@@ -22,7 +22,7 @@ namespace ouzel
 
         Node::~Node()
         {
-            if (parent) parent->removeChild(*this);
+            if (parent) parent->eraseChild(*this);
             if (currentAnimator) currentAnimator->remove();
 
             for (Component* component : components)

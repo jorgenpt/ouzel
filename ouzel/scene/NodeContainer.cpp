@@ -56,6 +56,22 @@ namespace ouzel
             }
         }
 
+        bool NodeContainer::eraseChild(Node& node)
+        {
+            std::vector<Node*>::iterator i = std::find(children.begin(), children.end(), &node);
+
+            if (i != children.end())
+            {
+                children.erase(i);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         void NodeContainer::removeAllChildren()
         {
             auto childrenCopy = children;
