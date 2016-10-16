@@ -2,6 +2,7 @@
 // This file is part of the Ouzel engine.
 
 #include "AnimationsSample.h"
+#include "MainMenu.h"
 
 using namespace std;
 using namespace ouzel;
@@ -13,6 +14,7 @@ AnimationsSample::AnimationsSample(Samples& pSamples):
     backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt")
 {
     eventHandler.uiHandler = bind(&AnimationsSample::handleUI, this, placeholders::_1, placeholders::_2);
+    eventHandler.keyboardHandler = bind(&AnimationsSample::handleKeyboard, this, placeholders::_1, placeholders::_2);
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
     layer.addCamera(camera);
@@ -75,7 +77,24 @@ bool AnimationsSample::handleUI(Event::Type type, const UIEvent& event) const
 {
     if (type == Event::Type::UI_CLICK_NODE && event.node == &backButton)
     {
-        samples.back();
+        samples.setSample("");
+    }
+
+    return true;
+}
+
+bool AnimationsSample::handleKeyboard(Event::Type type, const KeyboardEvent& event) const
+{
+    if (type == Event::Type::KEY_DOWN)
+    {
+        switch (event.key)
+        {
+            case input::KeyboardKey::ESCAPE:
+                samples.setSample("");
+                break;
+            default:
+                break;
+        }
     }
 
     return true;

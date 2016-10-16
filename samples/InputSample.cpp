@@ -2,6 +2,7 @@
 // This file is part of the Ouzel engine.
 
 #include "InputSample.h"
+#include "MainMenu.h"
 
 using namespace std;
 using namespace ouzel;
@@ -82,6 +83,10 @@ bool InputSample::handleKeyboard(Event::Type type, const KeyboardEvent& event)
             case input::KeyboardKey::TAB:
                 button.setEnabled(!button.isEnabled());
                 break;
+            case input::KeyboardKey::ESCAPE:
+                sharedEngine->getInput()->setCursorVisible(true);
+                samples.setSample("");
+                break;
             default:
                 break;
         }
@@ -160,13 +165,14 @@ bool InputSample::handleGamepad(Event::Type type, const GamepadEvent& event)
     return true;
 }
 
-bool InputSample::handleUI(Event::Type type, const UIEvent& event)
+bool InputSample::handleUI(Event::Type type, const UIEvent& event) const
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {
         if (event.node == &backButton)
         {
-            samples.back();
+            sharedEngine->getInput()->setCursorVisible(true);
+            samples.setSample("");
         }
         else if (event.node == &button)
         {

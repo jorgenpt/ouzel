@@ -12,11 +12,8 @@ public:
     virtual ~MainMenu();
 
 private:
-    virtual void enter() override;
-    virtual void leave() override;
-
-    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event);
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
 
     Samples& samples;
 

@@ -3,15 +3,13 @@
 
 #pragma once
 
+#include <memory>
+
 class Samples: public ouzel::Noncopyable
 {
 public:
     void begin(const std::string& sample);
     void setSample(const std::string& sample);
-    void back();
-
-private:
-    ouzel::EventHandler eventHandler;
 
     std::unique_ptr<ouzel::scene::Scene> current;
 };

@@ -11,7 +11,10 @@ public:
     AnimationsSample(Samples& pSamples);
     virtual ~AnimationsSample();
 
+private:
     bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
+
 
 private:
     Samples& samples;
@@ -28,6 +31,7 @@ private:
     ouzel::scene::Sprite ballSprite;
 
     ouzel::gui::Button backButton;
+
     ouzel::EventHandler eventHandler;
 
     ouzel::scene::Camera guiCamera;

@@ -2,6 +2,7 @@
 // This file is part of the Ouzel engine.
 
 #include "GUISample.h"
+#include "MainMenu.h"
 
 using namespace std;
 using namespace ouzel;
@@ -17,6 +18,7 @@ GUISample::GUISample(Samples& pSamples):
     backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt")
 {
     eventHandler.uiHandler = bind(&GUISample::handleUI, this, placeholders::_1, placeholders::_2);
+    eventHandler.keyboardHandler = bind(&GUISample::handleKeyboard, this, placeholders::_1, placeholders::_2);
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
     guiLayer.addCamera(camera);
@@ -62,7 +64,7 @@ bool GUISample::handleUI(Event::Type type, const UIEvent& event)
     {
         if (event.node == &backButton)
         {
-            samples.back();
+            samples.setSample("");
         }
         else if (event.node == &button)
         {
@@ -72,6 +74,23 @@ bool GUISample::handleUI(Event::Type type, const UIEvent& event)
         {
             bool fullscreen = ouzel::sharedEngine->getWindow()->isFullscreen();
             ouzel::sharedEngine->getWindow()->setFullscreen(!fullscreen);
+        }
+    }
+
+    return true;
+}
+
+bool GUISample::handleKeyboard(Event::Type type, const KeyboardEvent& event) const
+{
+    if (type == Event::Type::KEY_DOWN)
+    {
+        switch (event.key)
+        {
+            case input::KeyboardKey::ESCAPE:
+                samples.setSample("");
+                break;
+            default:
+                break;
         }
     }
 

@@ -11,11 +11,14 @@ public:
     RTSample(Samples& pSamples);
     virtual ~RTSample();
 
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
-
 private:
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
+
     Samples& samples;
+
     ouzel::gui::Button backButton;
+    
     ouzel::EventHandler eventHandler;
 
     ouzel::scene::Layer rtLayer;

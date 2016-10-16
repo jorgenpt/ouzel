@@ -2,6 +2,7 @@
 // This file is part of the Ouzel engine.
 
 #include "SpritesSample.h"
+#include "MainMenu.h"
 
 using namespace std;
 using namespace ouzel;
@@ -16,6 +17,7 @@ SpritesSample::SpritesSample(Samples& pSamples):
     backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt")
 {
     eventHandler.uiHandler = bind(&SpritesSample::handleUI, this, placeholders::_1, placeholders::_2);
+    eventHandler.keyboardHandler = bind(&SpritesSample::handleKeyboard, this, placeholders::_1, placeholders::_2);
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
     addLayer(layer);
@@ -67,7 +69,7 @@ bool SpritesSample::handleUI(Event::Type type, const UIEvent& event)
     {
         if (event.node == &backButton)
         {
-            samples.back();
+            samples.setSample("");
         }
         else if (event.node == &hideButton)
         {
@@ -76,6 +78,23 @@ bool SpritesSample::handleUI(Event::Type type, const UIEvent& event)
         else if (event.node == &wireframeButton)
         {
             layer.setWireframe(!layer.getWireframe());
+        }
+    }
+
+    return true;
+}
+
+bool SpritesSample::handleKeyboard(Event::Type type, const KeyboardEvent& event) const
+{
+    if (type == Event::Type::KEY_DOWN)
+    {
+        switch (event.key)
+        {
+            case input::KeyboardKey::ESCAPE:
+                samples.setSample("");
+                break;
+            default:
+                break;
         }
     }
 

@@ -28,8 +28,6 @@ void Samples::begin(const std::string& sample)
     sharedEngine->getRenderer()->setClearColor(graphics::Color(64, 0, 0));
     sharedEngine->getWindow()->setTitle("Samples");
 
-    sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
-
     setSample(sample);
 }
 
@@ -63,18 +61,10 @@ void Samples::setSample(const std::string& sample)
         }
     }
 
-    if (!current)
+    if (sample.empty() || !current)
     {
         current.reset(new MainMenu(*this));
     }
 
-    sharedEngine->getSceneManager()->setScene(*current);
-}
-
-void Samples::back()
-{
-    sharedEngine->getInput()->setCursorVisible(true);
-
-    current.reset(new MainMenu(*this));
     sharedEngine->getSceneManager()->setScene(*current);
 }

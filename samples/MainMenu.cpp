@@ -24,6 +24,8 @@ MainMenu::MainMenu(Samples& pSamples):
     eventHandler.uiHandler = bind(&MainMenu::handleUI, this, placeholders::_1, placeholders::_2);
     eventHandler.keyboardHandler = bind(&MainMenu::handleKeyboard, this, placeholders::_1, placeholders::_2);
 
+    sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
+
     addLayer(layer);
 
     layer.addCamera(camera);
@@ -53,17 +55,7 @@ MainMenu::~MainMenu()
 {
 }
 
-void MainMenu::enter()
-{
-    sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
-}
-
-void MainMenu::leave()
-{
-    sharedEngine->getEventDispatcher()->removeEventHandler(eventHandler);
-}
-
-bool MainMenu::handleKeyboard(Event::Type type, const KeyboardEvent& event)
+bool MainMenu::handleKeyboard(Event::Type type, const KeyboardEvent& event) const
 {
     if (event.key == ouzel::input::KeyboardKey::ESCAPE)
     {
@@ -78,7 +70,7 @@ bool MainMenu::handleKeyboard(Event::Type type, const KeyboardEvent& event)
     return true;
 }
 
-bool MainMenu::handleUI(Event::Type type, const UIEvent& event)
+bool MainMenu::handleUI(Event::Type type, const UIEvent& event) const
 {
     if (type == Event::Type::UI_CLICK_NODE)
     {

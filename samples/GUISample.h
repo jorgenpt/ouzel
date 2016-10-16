@@ -11,9 +11,10 @@ public:
     GUISample(Samples& pSamples);
     virtual ~GUISample();
 
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
-
 private:
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
+
     Samples& samples;
 
     ouzel::scene::Camera camera;
@@ -25,6 +26,7 @@ private:
     ouzel::gui::Label label3;
 
     ouzel::gui::Button backButton;
+    
     ouzel::EventHandler eventHandler;
 
     ouzel::gui::Button button;

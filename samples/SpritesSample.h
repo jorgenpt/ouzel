@@ -11,14 +11,17 @@ public:
     SpritesSample(Samples& pSamples);
     virtual ~SpritesSample();
 
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
-
 private:
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
+
+    Samples& samples;
+
     ouzel::scene::Layer layer;
     ouzel::scene::Camera camera;
 
-    Samples& samples;
     ouzel::gui::Button backButton;
+
     ouzel::EventHandler eventHandler;
 
     ouzel::scene::Sprite characterSprite;

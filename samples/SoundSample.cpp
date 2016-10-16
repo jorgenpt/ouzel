@@ -2,6 +2,7 @@
 // This file is part of the Ouzel engine.
 
 #include "SoundSample.h"
+#include "MainMenu.h"
 
 using namespace std;
 using namespace ouzel;
@@ -13,6 +14,7 @@ SoundSample::SoundSample(Samples& pSamples):
     backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt")
 {
     eventHandler.uiHandler = bind(&SoundSample::handleUI, this, placeholders::_1, placeholders::_2);
+    eventHandler.keyboardHandler = bind(&SoundSample::handleKeyboard, this, placeholders::_1, placeholders::_2);
     sharedEngine->getEventDispatcher()->addEventHandler(eventHandler);
 
     audio::SoundDataPtr jumpData = sharedEngine->getAudio()->createSoundData();
@@ -53,7 +55,7 @@ bool SoundSample::handleUI(Event::Type type, const UIEvent& event) const
     {
         if (event.node == &backButton)
         {
-            samples.back();
+            samples.setSample("");
         }
         else if (event.node == &jumpButton)
         {
@@ -62,6 +64,23 @@ bool SoundSample::handleUI(Event::Type type, const UIEvent& event) const
         else if (event.node == &ambientButton)
         {
             ambientSound->play();
+        }
+    }
+
+    return true;
+}
+
+bool SoundSample::handleKeyboard(Event::Type type, const KeyboardEvent& event) const
+{
+    if (type == Event::Type::KEY_DOWN)
+    {
+        switch (event.key)
+        {
+            case input::KeyboardKey::ESCAPE:
+                samples.setSample("");
+                break;
+            default:
+                break;
         }
     }
 

@@ -11,9 +11,10 @@ public:
     SoundSample(Samples& pSamples);
     virtual ~SoundSample();
 
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
-
 private:
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
+    bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event) const;
+
     Samples& samples;
 
     ouzel::scene::Layer guiLayer;
@@ -24,6 +25,7 @@ private:
     ouzel::gui::Button backButton;
     ouzel::gui::Button jumpButton;
     ouzel::gui::Button ambientButton;
+
     ouzel::EventHandler eventHandler;
 
     ouzel::audio::SoundPtr jumpSound;

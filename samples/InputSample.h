@@ -11,19 +11,20 @@ public:
     InputSample(Samples& pSamples);
     virtual ~InputSample();
 
+private:
     bool handleKeyboard(ouzel::Event::Type type, const ouzel::KeyboardEvent& event);
     bool handleMouse(ouzel::Event::Type type, const ouzel::MouseEvent& event);
     bool handleTouch(ouzel::Event::Type type, const ouzel::TouchEvent& event);
     bool handleGamepad(ouzel::Event::Type type, const ouzel::GamepadEvent& event);
-    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event);
+    bool handleUI(ouzel::Event::Type type, const ouzel::UIEvent& event) const;
 
-private:
     Samples& samples;
 
     ouzel::scene::Camera camera;
     ouzel::scene::Layer layer;
 
     ouzel::gui::Button backButton;
+
     ouzel::EventHandler eventHandler;
 
     ouzel::gui::Button button;
