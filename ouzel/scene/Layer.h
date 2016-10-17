@@ -30,7 +30,7 @@ namespace ouzel
             virtual void draw();
 
             bool isAddedToScene() const { return scene != nullptr; }
-            virtual bool addChild(Node& node) override;
+            virtual void addChild(Node& node) override;
 
             void addCamera(Camera& camera);
             void removeCamera(Camera& camera);

@@ -22,20 +22,17 @@ namespace ouzel
             }
         }
 
-        bool NodeContainer::addChild(Node& node)
+        void NodeContainer::addChild(Node& node)
         {
-            if (!hasChild(node) && !node.hasParent())
+            NodeContainer* oldParent = node.parent;
+            if (oldParent)
             {
-                node.setParent(this);
-                if (entered) node.enter();
-                children.push_back(&node);
+                oldParent->removeChild(node);
+            }
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            node.setParent(this);
+            if (entered) node.enter();
+            children.push_back(&node);
         }
 
         bool NodeContainer::removeChild(Node& node)

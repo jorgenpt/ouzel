@@ -27,12 +27,9 @@ namespace ouzel
             sharedEngine->getEventDispatcher()->removeEventHandler(eventHandler);
         }
 
-        bool Menu::addWidget(Widget& widget)
+        void Menu::addWidget(Widget& widget)
         {
-            if (!addChild(widget))
-            {
-                return false;
-            }
+            addChild(widget);
 
             widgets.push_back(&widget);
 
@@ -40,8 +37,6 @@ namespace ouzel
             {
                 selectWidget(&widget);
             }
-
-            return true;
         }
 
         bool Menu::removeWidget(Widget& widget)
