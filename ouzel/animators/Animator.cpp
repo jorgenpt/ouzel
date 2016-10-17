@@ -10,8 +10,8 @@ namespace ouzel
 {
     namespace scene
     {
-        Animator::Animator(float pLength):
-            length(pLength)
+        Animator::Animator(float aLength):
+            length(aLength)
         {
         }
 
