@@ -49,13 +49,16 @@ namespace ouzel
 
         void Scene::addLayer(Layer& layer)
         {
-            if (!layer.isAddedToScene() && !hasLayer(layer))
-            {
-                layers.push_back(&layer);
-                layer.addToScene(*this);
+            Scene* oldScene = layer.scene;
 
-                if (entered) layer.enter();
+            if (oldScene)
+            {
+                oldScene->removeLayer(layer);
             }
+
+            layer.addToScene(*this);
+            if (entered) layer.enter();
+            layers.push_back(&layer);
         }
 
         void Scene::removeLayer(Layer& layer)
