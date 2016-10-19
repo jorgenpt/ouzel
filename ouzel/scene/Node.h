@@ -123,7 +123,7 @@ namespace ouzel
             AABB2 getBoundingBox() const;
 
         protected:
-            void setParent(NodeContainer* newParent) { parent = newParent; }
+            void setParent(NodeContainer* newParent);
 
             virtual void visit(const Matrix4& newParentTransform,
                                bool parentTransformDirty,

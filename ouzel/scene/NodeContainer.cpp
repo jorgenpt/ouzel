@@ -25,19 +25,22 @@ namespace ouzel
         void NodeContainer::addChild(Node& node)
         {
             NodeContainer* oldParent = node.parent;
-            if (oldParent)
+            if (oldParent != this)
             {
-                oldParent->removeChild(node);
-            }
+                if (oldParent)
+                {
+                    oldParent->removeChild(node);
+                }
 
-            node.setParent(this);
-            if (entered) node.enter();
-            children.push_back(&node);
+                node.setParent(this);
+                if (entered) node.enter();
+                children.insert(&node);
+            }
         }
 
         bool NodeContainer::removeChild(Node& node)
         {
-            std::vector<Node*>::iterator i = std::find(children.begin(), children.end(), &node);
+            auto i = std::find(children.begin(), children.end(), &node);
 
             if (i != children.end())
             {
@@ -55,7 +58,7 @@ namespace ouzel
 
         bool NodeContainer::eraseChild(Node& node)
         {
-            std::vector<Node*>::iterator i = std::find(children.begin(), children.end(), &node);
+            auto i = std::find(children.begin(), children.end(), &node);
 
             if (i != children.end())
             {
@@ -84,7 +87,7 @@ namespace ouzel
 
         bool NodeContainer::hasChild(Node& node, bool recursive) const
         {
-            for (std::vector<Node*>::const_iterator i = children.begin(); i != children.end(); ++i)
+            for (auto i = children.begin(); i != children.end(); ++i)
             {
                 Node* child = *i;
 

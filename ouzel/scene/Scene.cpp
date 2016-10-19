@@ -51,19 +51,22 @@ namespace ouzel
         {
             Scene* oldScene = layer.scene;
 
-            if (oldScene)
+            if (oldScene != this)
             {
-                oldScene->removeLayer(layer);
-            }
+                if (oldScene)
+                {
+                    oldScene->removeLayer(layer);
+                }
 
-            layer.addToScene(*this);
-            if (entered) layer.enter();
-            layers.push_back(&layer);
+                layer.addToScene(*this);
+                if (entered) layer.enter();
+                layers.push_back(&layer);
+            }
         }
 
         void Scene::removeLayer(Layer& layer)
         {
-            std::vector<Layer*>::iterator i = std::find(layers.begin(), layers.end(), &layer);
+            auto i = std::find(layers.begin(), layers.end(), &layer);
 
             if (i != layers.end())
             {
@@ -80,7 +83,7 @@ namespace ouzel
 
         void Scene::eraseLayer(Layer& layer)
         {
-            std::vector<Layer*>::iterator i = std::find(layers.begin(), layers.end(), &layer);
+            auto i = std::find(layers.begin(), layers.end(), &layer);
 
             if (i != layers.end())
             {
@@ -103,7 +106,7 @@ namespace ouzel
 
         bool Scene::hasLayer(Layer& layer) const
         {
-            std::vector<Layer*>::const_iterator i = std::find(layers.begin(), layers.end(), &layer);
+            auto i = std::find(layers.begin(), layers.end(), &layer);
 
             return i != layers.end();
         }
@@ -118,7 +121,7 @@ namespace ouzel
 
         Node* Scene::pickNode(const Vector2& position) const
         {
-            for (std::vector<Layer*>::const_reverse_iterator i = layers.rbegin(); i != layers.rend(); ++i)
+            for (auto i = layers.rbegin(); i != layers.rend(); ++i)
             {
                 Layer* layer = *i;
 

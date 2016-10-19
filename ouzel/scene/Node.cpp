@@ -242,6 +242,11 @@ namespace ouzel
             return Vector2(worldPosition.x, worldPosition.y);
         }
 
+        void Node::setParent(NodeContainer* newParent)
+        {
+            parent = newParent;
+        }
+
         void Node::animate(const AnimatorPtr& animator)
         {
             removeAnimation();
