@@ -34,7 +34,7 @@ namespace ouzel
 
                 node.setParent(this);
                 if (entered) node.enter();
-                children.insert(&node);
+                children.push_back(&node);
             }
         }
 

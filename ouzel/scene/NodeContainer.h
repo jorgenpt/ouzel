@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <set>
 #include <vector>
 #include <memory>
 #include "utils/Types.h"
@@ -29,7 +28,7 @@ namespace ouzel
             virtual void removeAllChildren();
 
             virtual bool hasChild(Node& node, bool recursive = false) const;
-            virtual const std::set<Node*>& getChildren() const { return children; }
+            virtual const std::vector<Node*>& getChildren() const { return children; }
 
         protected:
             virtual bool eraseChild(Node& node);
@@ -40,7 +39,7 @@ namespace ouzel
             virtual void enter();
             virtual void leave();
 
-            std::set<Node*> children;
+            std::vector<Node*> children;
 
             bool entered = false;
         };
