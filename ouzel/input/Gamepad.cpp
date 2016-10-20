@@ -1,7 +1,7 @@
 // Copyright (C) 2016 Elviss Strazdins
 // This file is part of the Ouzel engine.
 
-#include <cstring>
+#include <algorithm>
 #include "Gamepad.h"
 #include "core/Engine.h"
 #include "events/EventDispatcher.h"
@@ -13,7 +13,9 @@ namespace ouzel
     {
         Gamepad::Gamepad()
         {
-            memset(buttonStates, 0, sizeof(buttonStates));
+            GamepadButtonState emptyState{ false, 0.0f };
+
+            std::fill(std::begin(buttonStates), std::end(buttonStates), emptyState);
         }
 
         bool Gamepad::isAttached() const
