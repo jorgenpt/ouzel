@@ -65,15 +65,4 @@ namespace ouzel
         class Gamepad;
         typedef std::shared_ptr<Gamepad> GamepadPtr;
     }
-
-    namespace scene
-    {
-        class SceneManager;
-
-        class SpriteFrame;
-        typedef std::shared_ptr<SpriteFrame> SpriteFramePtr;
-
-        struct ParticleDefinition;
-        typedef std::shared_ptr<ParticleDefinition> ParticleDefinitionPtr;
-    } // namespace scene
 } // namespace ouzel

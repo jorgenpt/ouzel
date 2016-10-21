@@ -20,6 +20,11 @@ void ouzelMain(const std::vector<std::string>& args);
 
 namespace ouzel
 {
+    namespace scene
+    {
+        class SceneManager;
+    }
+
     class Engine: public Noncopyable
     {
     public:
