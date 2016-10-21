@@ -39,21 +39,21 @@ namespace ouzel
             }
         }
 
-        bool Menu::removeWidget(Widget& widget)
+        bool Menu::removeChild(Node& node)
         {
-            if (!removeChild(widget))
+            if (!Node::removeChild(node))
             {
                 return false;
             }
 
-            auto i = std::find(widgets.begin(), widgets.end(), &widget);
+            auto i = std::find(widgets.begin(), widgets.end(), &node);
 
             if (i != widgets.end())
             {
                 widgets.erase(i);
             }
 
-            if (selectedWidget == &widget)
+            if (selectedWidget == &node)
             {
                 selectWidget(nullptr);
             }

@@ -55,12 +55,8 @@ namespace ouzel
 
             void setRenderTarget(const graphics::RenderTargetPtr& newRenderTarget);
             const graphics::RenderTargetPtr& getRenderTarget() const { return renderTarget; }
-
-            void addToDrawQueue(Node& node);
-            const std::vector<Node*>& getDrawQueue() const { return drawQueue; }
             
         protected:
-            void clearDrawQueue() { drawQueue.clear(); }
             virtual void calculateLocalTransform() const override;
 
             Matrix4 projection = Matrix4::IDENTITY;
@@ -81,8 +77,6 @@ namespace ouzel
             Layer* layer = nullptr;
 
             graphics::RenderTargetPtr renderTarget;
-
-            std::vector<Node*> drawQueue;
         };
     } // namespace scene
 } // namespace ouzel
