@@ -50,7 +50,7 @@ namespace ouzel
             InputApple();
 
             ConnectDelegatePtr connectDelegate = nullptr;
-            std::vector<std::shared_ptr<GamepadApple>> gamepads;
+            std::vector<std::unique_ptr<GamepadApple>> gamepads;
 
             bool discovering = false;
             bool cursorVisible = true;

@@ -32,7 +32,7 @@ namespace ouzel
         protected:
             InputWin();
 
-            std::shared_ptr<GamepadWin> gamepads[XUSER_MAX_COUNT];
+            std::unique_ptr<GamepadWin> gamepads[XUSER_MAX_COUNT];
 
             bool cursorVisible = true;
         };
