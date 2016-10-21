@@ -190,7 +190,7 @@ namespace ouzel
             event.touchEvent.position = position;
 
             auto i = touchPositions.find(touchId);
-            
+
             if (i != touchPositions.end())
             {
                 touchPositions.erase(i);
