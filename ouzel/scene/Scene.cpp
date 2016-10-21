@@ -204,9 +204,11 @@ namespace ouzel
                     scene::Node* node = pickNode(event.position);
                     pointerEnterNode(0, node, event.position);
 
-                    if (scene::Node* pointerDownOnNode = getPointerDownOnNode(0))
+                    auto i = pointerDownOnNodes.find(0);
+
+                    if (i != pointerDownOnNodes.end())
                     {
-                        pointerDragNode(0, pointerDownOnNode, event.position);
+                        pointerDragNode(0, i->second, event.position);
                     }
                     break;
                 }
@@ -238,9 +240,11 @@ namespace ouzel
                     scene::Node* node = pickNode(event.position);
                     pointerEnterNode(0, node, event.position);
 
-                    if (scene::Node* pointerDownOnNode = getPointerDownOnNode(event.touchId))
+                    auto i = pointerDownOnNodes.find(event.touchId);
+
+                    if (i != pointerDownOnNodes.end())
                     {
-                        pointerDragNode(event.touchId, pointerDownOnNode, event.position);
+                        pointerDragNode(event.touchId, i->second, event.position);
                     }
                     break;
                 }
@@ -257,47 +261,24 @@ namespace ouzel
             return true;
         }
 
-        scene::Node* Scene::getPointerOnNode(uint64_t pointerId) const
+        void Scene::pointerEnterNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
         {
-            scene::Node* result = nullptr;
-
-            auto i = pointerOnNodes.find(pointerId);
-
-            if (i != pointerOnNodes.end())
-            {
-                result = i->second;
-            }
-
-            return result;
-        }
-
-        scene::Node* Scene::getPointerDownOnNode(uint64_t pointerId) const
-        {
-            scene::Node* result = nullptr;
-
             auto i = pointerDownOnNodes.find(pointerId);
 
             if (i != pointerDownOnNodes.end())
             {
-                result = i->second;
-            }
+                auto pointerOnNode = i->second;
 
-            return result;
-        }
-
-        void Scene::pointerEnterNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
-        {
-            scene::Node* pointerOnNode = getPointerOnNode(pointerId);
-
-            if (pointerOnNode)
-            {
-                if (pointerOnNode == node)
+                if (pointerOnNode)
                 {
-                    return;
-                }
-                else
-                {
-                    pointerLeaveNode(pointerId, pointerOnNode, position);
+                    if (pointerOnNode == node)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        pointerLeaveNode(pointerId, pointerOnNode, position);
+                    }
                 }
             }
 
@@ -309,7 +290,7 @@ namespace ouzel
                 event.type = Event::Type::UI_ENTER_NODE;
 
                 event.uiEvent.node = node;
-                event.uiEvent.position = node->convertWorldToLocal(position);
+                event.uiEvent.position = position;
 
                 sharedEngine->getEventDispatcher()->postEvent(event);
             }
@@ -323,7 +304,7 @@ namespace ouzel
                 event.type = Event::Type::UI_LEAVE_NODE;
 
                 event.uiEvent.node = node;
-                event.uiEvent.position = node->convertWorldToLocal(position);
+                event.uiEvent.position = position;
 
                 sharedEngine->getEventDispatcher()->postEvent(event);
             }
@@ -341,7 +322,7 @@ namespace ouzel
                 event.type = Event::Type::UI_PRESS_NODE;
 
                 event.uiEvent.node = node;
-                event.uiEvent.position = node->convertWorldToLocal(position);
+                event.uiEvent.position = position;
 
                 sharedEngine->getEventDispatcher()->postEvent(event);
             }
@@ -349,27 +330,32 @@ namespace ouzel
 
         void Scene::pointerUpOnNode(uint64_t pointerId, scene::Node* node, const Vector2& position)
         {
-            scene::Node* pointerDownOnNode = getPointerDownOnNode(pointerId);
+            auto i = pointerDownOnNodes.find(pointerId);
 
-            if (pointerDownOnNode)
+            if (i != pointerDownOnNodes.end())
             {
-                Event releaseEvent;
-                releaseEvent.type = Event::Type::UI_RELEASE_NODE;
+                auto pointerDownOnNode = i->second;
 
-                releaseEvent.uiEvent.node = pointerDownOnNode;
-                releaseEvent.uiEvent.position = pointerDownOnNode->convertWorldToLocal(position);
-
-                sharedEngine->getEventDispatcher()->postEvent(releaseEvent);
-
-                if (pointerDownOnNode == node)
+                if (pointerDownOnNode)
                 {
-                    Event clickEvent;
-                    clickEvent.type = Event::Type::UI_CLICK_NODE;
+                    Event releaseEvent;
+                    releaseEvent.type = Event::Type::UI_RELEASE_NODE;
 
-                    clickEvent.uiEvent.node = pointerDownOnNode;
-                    clickEvent.uiEvent.position = pointerDownOnNode->convertWorldToLocal(position);
+                    releaseEvent.uiEvent.node = pointerDownOnNode;
+                    releaseEvent.uiEvent.position = position;
 
-                    sharedEngine->getEventDispatcher()->postEvent(clickEvent);
+                    sharedEngine->getEventDispatcher()->postEvent(releaseEvent);
+
+                    if (pointerDownOnNode == node)
+                    {
+                        Event clickEvent;
+                        clickEvent.type = Event::Type::UI_CLICK_NODE;
+
+                        clickEvent.uiEvent.node = pointerDownOnNode;
+                        clickEvent.uiEvent.position = position;
+
+                        sharedEngine->getEventDispatcher()->postEvent(clickEvent);
+                    }
                 }
             }
 
@@ -384,7 +370,7 @@ namespace ouzel
                 event.type = Event::Type::UI_DRAG_NODE;
 
                 event.uiEvent.node = node;
-                event.uiEvent.position = node->convertWorldToLocal(position);
+                event.uiEvent.position = position;
 
                 sharedEngine->getEventDispatcher()->postEvent(event);
             }

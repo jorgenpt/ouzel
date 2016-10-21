@@ -54,9 +54,6 @@ namespace ouzel
             bool handleMouse(Event::Type type, const MouseEvent& event);
             bool handleTouch(Event::Type type, const TouchEvent& event);
 
-            Node* getPointerOnNode(uint64_t pointerId) const;
-            Node* getPointerDownOnNode(uint64_t pointerId) const;
-
             void pointerEnterNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
             void pointerLeaveNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
             void pointerDownOnNode(uint64_t pointerId, scene::Node* node, const Vector2& position);
