@@ -112,16 +112,14 @@ namespace ouzel
             }
             else
             {
-                graphics::TexturePtr texture = sharedEngine->getCache()->getTexture(filename, false, mipmaps);
+                graphics::TexturePtr texture = getTexture(filename, false, mipmaps);
 
-                if (!texture)
+                if (texture)
                 {
-                    return frames;
+                    Rectangle rectangle(0.0f, 0.0f, texture->getSize().width, texture->getSize().height);
+
+                    frames.push_back(scene::SpriteFrame(texture, rectangle, false, texture->getSize(), Vector2(), Vector2(0.5f, 0.5f)));
                 }
-
-                Rectangle rectangle(0.0f, 0.0f, texture->getSize().width, texture->getSize().height);
-
-                frames.push_back(scene::SpriteFrame(texture, rectangle, false, texture->getSize(), Vector2(), Vector2(0.5f, 0.5f)));
             }
 
             spriteFrames[filename] = frames;

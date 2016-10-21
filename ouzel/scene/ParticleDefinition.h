@@ -18,14 +18,14 @@ namespace ouzel
             enum class EmitterType
             {
                 GRAVITY,
-                RADIUS,
+                RADIUS
             };
 
             enum class PositionType
             {
                 FREE,
                 RELATIVE,
-                GROUPED,
+                GROUPED
             };
 
             uint32_t blendFuncSource = 1;
