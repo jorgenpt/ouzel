@@ -73,7 +73,6 @@ namespace ouzel
             selected = false;
             pointerOver = false;
             pressed = false;
-            receiveInput = enabled;
 
             updateSprite();
         }

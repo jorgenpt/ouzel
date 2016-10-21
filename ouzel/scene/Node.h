@@ -108,9 +108,6 @@ namespace ouzel
             Vector2 convertWorldToLocal(const Vector2& worldPosition) const;
             Vector2 convertLocalToWorld(const Vector2& localPosition) const;
 
-            void setReceiveInput(bool newReceiveInput) { receiveInput = newReceiveInput; }
-            bool isReceivingInput() const { return receiveInput; }
-
             const std::vector<Component*>& getComponents() const { return components; }
             void addComponent(Component& component);
 
@@ -149,7 +146,6 @@ namespace ouzel
             bool pickable = false;
             bool cullDisabled = false;
             bool hidden = false;
-            bool receiveInput = false;
 
             std::string name;
 
