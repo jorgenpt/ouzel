@@ -1,6 +1,7 @@
 // Copyright (C) 2016 Elviss Strazdins
 // This file is part of the Ouzel engine.
 
+#include "core/Cache.h"
 #include "RendererD3D11.h"
 #include "core/Engine.h"
 #include "TextureD3D11.h"
@@ -14,8 +15,6 @@
 #include "TextureVSD3D11.h"
 #include "ColorPSD3D11.h"
 #include "ColorVSD3D11.h"
-#include "scene/Camera.h"
-#include "core/Cache.h"
 #include "events/EventDispatcher.h"
 #include "BlendStateD3D11.h"
 #include "core/windows/WindowWin.h"
