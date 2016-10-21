@@ -18,14 +18,11 @@ namespace ouzel
             seedY = random();
         }
 
-        void Shake::start(Node* targetNode)
+        void Shake::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
-            if (targetNode)
-            {
-                startPosition = targetNode->getPosition();
-            }
+            startPosition = targetNode.getPosition();
         }
 
         void Shake::updateProgress()

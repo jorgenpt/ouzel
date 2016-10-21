@@ -7,12 +7,12 @@ namespace ouzel
 {
     namespace scene
     {
-        Repeat::Repeat(const AnimatorPtr& aAnimator, uint32_t aCount):
+        Repeat::Repeat(Animator* aAnimator, uint32_t aCount):
             Animator(aAnimator->getLength() * static_cast<float>(aCount)), animator(aAnimator), count(aCount)
         {
         }
 
-        void Repeat::start(Node* targetNode)
+        void Repeat::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
@@ -32,6 +32,11 @@ namespace ouzel
             }
 
             currentCount = 0;
+        }
+
+        void Repeat::remove()
+        {
+            if (animator) animator->remove();
         }
 
         void Repeat::updateProgress()

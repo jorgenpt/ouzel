@@ -17,7 +17,6 @@ namespace ouzel
     {
         Node::Node()
         {
-            animationUpdateCallback.callback = std::bind(&Node::updateAnimation, this, std::placeholders::_1);
         }
 
         Node::~Node()
@@ -242,34 +241,6 @@ namespace ouzel
             return Vector2(worldPosition.x, worldPosition.y);
         }
 
-        void Node::setParent(NodeContainer* newParent)
-        {
-            parent = newParent;
-        }
-
-        void Node::animate(const AnimatorPtr& animator)
-        {
-            removeAnimation();
-            currentAnimator = animator;
-
-            if (currentAnimator)
-            {
-                currentAnimator->start(this);
-                sharedEngine->scheduleUpdate(animationUpdateCallback);
-            }
-        }
-
-        void Node::removeAnimation()
-        {
-            if (currentAnimator)
-            {
-                currentAnimator->stop();
-                currentAnimator->remove();
-                currentAnimator.reset();
-                sharedEngine->unscheduleUpdate(animationUpdateCallback);
-            }
-        }
-
         void Node::calculateLocalTransform() const
         {
             localTransform = Matrix4::IDENTITY;
@@ -360,23 +331,6 @@ namespace ouzel
         void Node::removeAllComponents()
         {
             components.clear();
-        }
-
-        void Node::updateAnimation(float delta)
-        {
-            if (currentAnimator)
-            {
-                currentAnimator->update(delta);
-
-                if (currentAnimator->isDone())
-                {
-                    removeAnimation();
-                }
-            }
-            else
-            {
-                sharedEngine->unscheduleUpdate(animationUpdateCallback);
-            }
         }
 
         AABB2 Node::getBoundingBox() const

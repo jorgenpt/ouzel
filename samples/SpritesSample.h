@@ -19,6 +19,8 @@ private:
     ouzel::scene::Layer layer;
     ouzel::scene::Camera camera;
 
+    ouzel::scene::Move move;
+
     ouzel::gui::Button backButton;
 
     ouzel::EventHandler eventHandler;

@@ -13,11 +13,12 @@ namespace ouzel
         Animator::Animator(float aLength):
             length(aLength)
         {
+            updateCallback.callback = std::bind(&Animator::update, this, std::placeholders::_1);
         }
 
         Animator::~Animator()
         {
-            if (node) node->removeAnimation();
+            if (node && node->currentAnimator == this) node->currentAnimator = nullptr;
         }
 
         void Animator::update(float delta)
@@ -42,24 +43,44 @@ namespace ouzel
             }
         }
 
-        void Animator::start(Node* targetNode)
+        void Animator::animate(Node& targetNode)
         {
-            if (!running)
+            if (targetNode.currentAnimator != this)
             {
-                running = true;
-                node = targetNode;
+                if (targetNode.currentAnimator)
+                {
+                    targetNode.currentAnimator->remove();
+                }
+
+                targetNode.currentAnimator = this;
+                sharedEngine->scheduleUpdate(updateCallback);
+                start(targetNode);
             }
+        }
+
+        void Animator::start(Node& targetNode)
+        {
+            running = true;
+            node = &targetNode;
         }
 
         void Animator::remove()
         {
-            node = nullptr;
+            if (node)
+            {
+                sharedEngine->unscheduleUpdate(updateCallback);
+                node->currentAnimator = nullptr;
+                node = nullptr;
+            }
+
+            running = false;
         }
 
         void Animator::resume()
         {
             if (!running)
             {
+                sharedEngine->scheduleUpdate(updateCallback);
                 running = true;
             }
         }
@@ -68,6 +89,7 @@ namespace ouzel
         {
             if (running)
             {
+                sharedEngine->unscheduleUpdate(updateCallback);
                 running = false;
             }
 

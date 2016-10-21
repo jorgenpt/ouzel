@@ -13,17 +13,14 @@ namespace ouzel
         {
         }
 
-        void Scale::start(Node* targetNode)
+        void Scale::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
-            if (targetNode)
-            {
-                startScale = targetNode->getScale();
-                targetScale = relative ? startScale + scale : scale;
+            startScale = targetNode.getScale();
+            targetScale = relative ? startScale + scale : scale;
 
-                diff = targetScale - startScale;
-            }
+            diff = targetScale - startScale;
         }
 
         void Scale::updateProgress()

@@ -31,33 +31,51 @@ AnimationsSample::AnimationsSample(Samples& pSamples):
     drawNode.setPosition(Vector2(-300, 0.0f));
     layer.addChild(drawNode);
 
-    drawNode.animate(make_shared<scene::Shake>(10.0f, Vector2(10.0f, 20.0f), 20.0f));
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Shake(10.0f, Vector2(10.0f, 20.0f), 20.0f)));
+
+    animators.back()->animate(drawNode);
 
     witch.setPosition(Vector2(200, 0.0f));
     witch.addComponent(witchSprite);
     layer.addChild(witch);
 
-    vector<scene::AnimatorPtr> parallel = {
-        make_shared<scene::Scale>(2.0f, Vector2(0.1f, 0.1f), false),
-        make_shared<scene::Fade>(2.0f, 0.4f)
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Scale(2.0f, Vector2(0.1f, 0.1f), false)));
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Fade(2.0f, 0.4f)));
+
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Rotate(1.0f, TAU, false)));
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Repeat(animators[3].get(), 3)));
+
+    vector<scene::Animator*> parallel = {
+        animators[1].get(),
+        animators[2].get()
     };
 
-    vector<scene::AnimatorPtr> sequence = {
-        make_shared<scene::Repeat>(make_shared<scene::Rotate>(1.0f, TAU, false), 3),
-        make_shared<scene::Parallel>(parallel)
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Parallel(parallel)));
+
+    vector<scene::Animator*> sequence = {
+        animators[4].get(),
+        animators[5].get()
     };
 
-    witch.animate(make_shared<scene::Sequence>(sequence));
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Sequence(sequence)));
+
+    animators.back()->animate(witch);
 
     ball.addComponent(ballSprite);
     layer.addChild(ball);
 
-    vector<scene::AnimatorPtr> sequence2 = {
-        make_shared<scene::Animator>(1.0f), // delay
-        make_shared<scene::Ease>(make_shared<scene::Move>(2.0f, Vector2(0.0f, -240.0f), false), scene::Ease::Type::OUT, scene::Ease::Func::BOUNCE)
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Animator(1.0f))); // delay
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Move(2.0f, Vector2(0.0f, -240.0f), false)));
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Ease(*animators.back().get(), scene::Ease::Type::OUT, scene::Ease::Func::BOUNCE)));
+
+    vector<scene::Animator*> sequence2 = {
+        animators[7].get(),
+        animators[9].get()
     };
 
-    ball.animate(make_shared<scene::Sequence>(sequence2));
+    animators.push_back(std::unique_ptr<scene::Animator>(new scene::Sequence(sequence2)));
+
+    animators.back()->animate(ball);
 
     guiLayer.addCamera(guiCamera);
     addLayer(guiLayer);

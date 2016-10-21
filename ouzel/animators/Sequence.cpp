@@ -8,12 +8,12 @@ namespace ouzel
 {
     namespace scene
     {
-        Sequence::Sequence(const std::vector<AnimatorPtr>& aAnimators):
-            Animator(std::accumulate(aAnimators.begin(), aAnimators.end(), 0.0f, [](float a, const AnimatorPtr& b) { return a + b->getLength(); })), animators(aAnimators)
+        Sequence::Sequence(const std::vector<Animator*>& aAnimators):
+            Animator(std::accumulate(aAnimators.begin(), aAnimators.end(), 0.0f, [](float a, Animator* b) { return a + b->getLength(); })), animators(aAnimators)
         {
         }
 
-        void Sequence::start(Node* targetNode)
+        void Sequence::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
@@ -30,6 +30,14 @@ namespace ouzel
             for (const auto& animator : animators)
             {
                 animator->reset();
+            }
+        }
+
+        void Sequence::remove()
+        {
+            for (Animator* animator : animators)
+            {
+                animator->remove();
             }
         }
 

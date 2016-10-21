@@ -14,7 +14,8 @@ SpritesSample::SpritesSample(Samples& pSamples):
     triangleSprite("triangle.json"),
     hideButton("button.png", "button_selected.png", "button_down.png", "", "Show/hide", graphics::Color::BLACK, "arial.fnt"),
     wireframeButton("button.png", "button_selected.png", "button_down.png", "", "Wireframe", graphics::Color::BLACK, "arial.fnt"),
-    backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt")
+    backButton("button.png", "button_selected.png", "button_down.png", "", "Back", graphics::Color::BLACK, "arial.fnt"),
+    move(4.0f, Vector2(300.0f, 0.0f))
 {
     eventHandler.uiHandler = bind(&SpritesSample::handleUI, this, placeholders::_1, placeholders::_2);
     eventHandler.keyboardHandler = bind(&SpritesSample::handleKeyboard, this, placeholders::_1, placeholders::_2);
@@ -29,7 +30,8 @@ SpritesSample::SpritesSample(Samples& pSamples):
     character.addComponent(characterSprite);
     layer.addChild(character);
     character.setPosition(Vector2(-300.0f, 0.0f));
-    character.animate(make_shared<scene::Move>(4.0f, Vector2(300.0f, 0.0f)));
+
+    move.animate(character);
 
     // fire
     fireSprite.setOffset(Vector2(0.0f, 20.0f));

@@ -13,17 +13,14 @@ namespace ouzel
         {
         }
 
-        void Move::start(Node* targetNode)
+        void Move::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
-            if (targetNode)
-            {
-                startPosition = targetNode->getPosition();
-                targetPosition = relative ? startPosition + position : position;
+            startPosition = targetNode.getPosition();
+            targetPosition = relative ? startPosition + position : position;
 
-                diff = targetPosition - startPosition;
-            }
+            diff = targetPosition - startPosition;
         }
 
         void Move::updateProgress()

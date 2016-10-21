@@ -75,8 +75,5 @@ namespace ouzel
 
         struct ParticleDefinition;
         typedef std::shared_ptr<ParticleDefinition> ParticleDefinitionPtr;
-
-        class Animator;
-        typedef std::shared_ptr<Animator> AnimatorPtr;
     } // namespace scene
 } // namespace ouzel

@@ -21,11 +21,13 @@ namespace ouzel
     {
         class Component;
         class Camera;
+        class Animator;
 
         class Node: public NodeContainer
         {
             friend NodeContainer;
             friend Layer;
+            friend Animator;
         public:
             Node();
             virtual ~Node();
@@ -106,10 +108,6 @@ namespace ouzel
             Vector2 convertWorldToLocal(const Vector2& worldPosition) const;
             Vector2 convertLocalToWorld(const Vector2& localPosition) const;
 
-            void animate(const AnimatorPtr& animator);
-            AnimatorPtr getAnimator() const { return currentAnimator; }
-            void removeAnimation();
-
             void setReceiveInput(bool newReceiveInput) { receiveInput = newReceiveInput; }
             bool isReceivingInput() const { return receiveInput; }
 
@@ -123,8 +121,6 @@ namespace ouzel
             AABB2 getBoundingBox() const;
 
         protected:
-            void setParent(NodeContainer* newParent);
-
             virtual void visit(const Matrix4& newParentTransform,
                                bool parentTransformDirty,
                                Camera* camera,
@@ -136,8 +132,6 @@ namespace ouzel
             virtual void calculateTransform() const;
 
             virtual void calculateInverseTransform() const;
-
-            void updateAnimation(float delta);
 
             Matrix4 parentTransform = Matrix4::IDENTITY;
             mutable Matrix4 transform;
@@ -167,12 +161,10 @@ namespace ouzel
             float parentZ = 0.0f;
             float z = 0.0f;
 
-            AnimatorPtr currentAnimator;
+            Animator* currentAnimator = nullptr;
             std::vector<Component*> components;
 
             NodeContainer* parent = nullptr;
-
-            UpdateCallback animationUpdateCallback;
         };
     } // namespace scene
 } // namespace ouzel

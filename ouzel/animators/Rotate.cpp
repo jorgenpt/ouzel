@@ -13,17 +13,14 @@ namespace ouzel
         {
         }
 
-        void Rotate::start(Node* targetNode)
+        void Rotate::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
-            if (targetNode)
-            {
-                startRotation = targetNode->getRotation();
-                targetRotation = relative ? startRotation + rotation : rotation;
+            startRotation = targetNode.getRotation();
+            targetRotation = relative ? startRotation + rotation : rotation;
 
-                diff = targetRotation - startRotation;
-            }
+            diff = targetRotation - startRotation;
         }
 
         void Rotate::updateProgress()

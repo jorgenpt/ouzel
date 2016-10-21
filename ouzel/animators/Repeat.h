@@ -13,15 +13,16 @@ namespace ouzel
         class Repeat: public Animator
         {
         public:
-            Repeat(const AnimatorPtr& aAnimator, uint32_t aCount = 0);
+            Repeat(Animator* aAnimator, uint32_t aCount = 0);
 
-            virtual void start(Node* targetNode) override;
+            virtual void start(Node& targetNode) override;
             virtual void reset() override;
+            virtual void remove() override;
 
         protected:
             virtual void updateProgress() override;
 
-            AnimatorPtr animator;
+            Animator* animator;
             uint32_t count = 0;
             uint32_t currentCount = 0;
         };

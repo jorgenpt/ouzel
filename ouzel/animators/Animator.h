@@ -6,6 +6,7 @@
 #include <functional>
 #include "utils/Noncopyable.h"
 #include "utils/Types.h"
+#include "core/UpdateCallback.h"
 
 namespace ouzel
 {
@@ -19,14 +20,13 @@ namespace ouzel
             Animator(float aLength);
             virtual ~Animator();
 
-            virtual void update(float delta);
-
-            virtual void start(Node* targetNode);
-            virtual void remove();
+            virtual void animate(Node& targetNode);
+            virtual void start(Node& targetNode);
 
             virtual void resume();
             virtual void stop(bool resetAnimation = false);
             virtual void reset();
+            virtual void remove();
 
             bool isRunning() const { return running; }
             bool isDone() const { return done; }
@@ -40,6 +40,7 @@ namespace ouzel
             void setFinishHandler(const std::function<void()>& handler) { finishHandler = handler; }
 
         protected:
+            virtual void update(float delta);
             virtual void updateProgress();
 
             float length = 0.0f;
@@ -51,6 +52,7 @@ namespace ouzel
             Node* node = nullptr;
 
             std::function<void()> finishHandler;
+            UpdateCallback updateCallback;
         };
     } // namespace scene
 } // namespace ouzel

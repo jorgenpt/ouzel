@@ -37,4 +37,6 @@ private:
     ouzel::scene::Layer guiLayer;
 
     ouzel::gui::Menu menu;
+
+    std::vector<std::unique_ptr<ouzel::scene::Animator>> animators;
 };

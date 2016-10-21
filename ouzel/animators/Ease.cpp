@@ -253,12 +253,12 @@ namespace ouzel
                 return bounceOut(t * 2.0f - 1.0f) * 0.5f + 0.5f;
         }
 
-        Ease::Ease(const AnimatorPtr& aAnimator, Type aType, Func aFunc):
-            Animator(aAnimator->getLength()), animator(aAnimator), type(aType), func(aFunc)
+        Ease::Ease(Animator& aAnimator, Type aType, Func aFunc):
+            Animator(aAnimator.getLength()), animator(&aAnimator), type(aType), func(aFunc)
         {
         }
 
-        void Ease::start(Node* targetNode)
+        void Ease::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
@@ -270,6 +270,11 @@ namespace ouzel
             Animator::reset();
 
             animator->reset();
+        }
+
+        void Ease::remove()
+        {
+            if (animator) animator->remove();
         }
 
         void Ease::updateProgress()

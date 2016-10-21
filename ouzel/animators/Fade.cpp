@@ -13,17 +13,14 @@ namespace ouzel
         {
         }
 
-        void Fade::start(Node* targetNode)
+        void Fade::start(Node& targetNode)
         {
             Animator::start(targetNode);
 
-            if (targetNode)
-            {
-                startOpacity = targetNode->getOpacity();
-                targetOpacity = relative ? startOpacity + opacity : opacity;
+            startOpacity = targetNode.getOpacity();
+            targetOpacity = relative ? startOpacity + opacity : opacity;
 
-                diff = targetOpacity - startOpacity;
-            }
+            diff = targetOpacity - startOpacity;
         }
 
         void Fade::updateProgress()
